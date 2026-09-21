@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071017">
+  <title>Certification Mission Control</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="grain"></div>
+  <main id="app">
+    <section id="home" class="home view">
+      <div class="hero">
+        <p class="kicker" id="examCode">CERTIFICATION SIMULATOR</p>
+        <h1 id="heroTitle">Lead the<br><em>AI shift.</em></h1>
+        <p class="intro" id="heroIntro"></p>
+        <div class="metrics" id="metrics"></div>
+      </div>
+      <aside class="launch card">
+        <div class="launch-heading"><span class="status-dot"></span><span>SIMULATION READY</span></div>
+        <h2>Configure your run</h2>
+        <label class="exam-picker"><span>Exam</span><select id="examSelect" aria-label="Choose an exam"></select></label>
+        <label class="mode">
+          <input type="radio" name="mode" value="practice" checked>
+          <span><b>Practice</b><small>Feedback and rationale after each answer</small></span>
+          <i></i>
+        </label>
+        <label class="mode">
+          <input type="radio" name="mode" value="exam">
+          <span><b>Exam simulation</b><small>Timed attempt with feedback at the end</small></span>
+          <i></i>
+        </label>
+        <div class="toggles">
+          <label><input id="shuffleQuestions" type="checkbox" checked> Shuffle questions</label>
+          <label><input id="shuffleAnswers" type="checkbox" checked disabled> Shuffle answers</label>
+        </div>
+        <button id="start" class="primary">Launch simulation <span>→</span></button>
+        <button id="resume" class="secondary full" hidden>Resume saved session</button>
+      </aside>
+    </section>
+
+    <section id="session" class="session view" hidden>
+      <aside class="rail">
+        <div class="brand"><span id="brandMark">AB</span><b>Mission Control</b></div>
+        <div class="rail-progress"><strong id="answeredCount">0/0</strong><small>answered</small></div>
+        <div class="progress"><i id="progressFill"></i></div>
+        <p class="rail-label">Question navigator</p>
+        <div id="navigator" class="navigator"></div>
+        <div class="legend"><span class="answered">Answered</span><span class="flagged">Flagged</span></div>
+        <div class="shortcuts">
+          <div><span>Select</span><kbd>1</kbd>–<kbd>4</kbd></div>
+          <div><span>Navigate</span><kbd>←</kbd> <kbd>→</kbd></div>
+          <div><span>Flag</span><kbd>F</kbd></div>
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="topbar">
+          <span id="domain" class="domain"></span>
+          <span id="clock" class="clock">00:00</span>
+          <div class="top-actions">
+            <button id="flag" class="icon-button">⚐ <span>Flag</span></button>
+            <button id="finish" class="icon-button">Finish ↗</button>
+          </div>
+        </header>
+        <div class="question-wrap">
+          <article id="caseStudy" class="case-study" hidden>
+            <button id="caseToggle" class="case-toggle"><span>CASE STUDY</span><b id="caseTitle"></b><i>−</i></button>
+            <div id="caseBody" class="case-body"></div>
+          </article>
+          <div class="question-meta"><span id="questionNumber"></span><span id="questionType"></span></div>
+          <h2 id="prompt" class="prompt"></h2>
+          <p id="instruction" class="instruction"></p>
+          <div id="answers" class="answers"></div>
+          <div id="rationale" class="rationale" hidden></div>
+        </div>
+        <footer class="question-nav">
+          <button id="previous" class="secondary">← Previous</button>
+          <button id="check" class="primary compact" hidden>Check answer</button>
+          <button id="next" class="primary compact">Next →</button>
+        </footer>
+      </div>
+    </section>
+
+    <section id="results" class="results view" hidden>
+      <div class="results-wrap">
+        <div class="score-card card">
+          <div id="scoreRing" class="score-ring"><div><strong id="scorePercent">0%</strong><small>FINAL SCORE</small></div></div>
+          <div class="score-copy">
+            <p class="kicker">SIMULATION COMPLETE</p>
+            <h2 id="headline"></h2>
+            <p id="summary"></p>
+            <div class="score-stats">
+              <span><b id="correctCount">0</b><small>Correct</small></span>
+              <span><b id="incorrectCount">0</b><small>Incorrect</small></span>
+              <span><b id="timeUsed">0:00</b><small>Time used</small></span>
+            </div>
+            <div class="result-actions"><button id="retry" class="primary compact">Retry missed</button><button id="newRun" class="secondary">New simulation</button></div>
+          </div>
+        </div>
+        <div id="domainResults" class="domain-results"></div>
+        <div id="review" class="review"></div>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="exams/ab-731.js"></script>
+  <script src="exams/ab-900.js"></script>
+  <script src="exams/sc-500.js"></script>
+  <script src="exams/ai-103.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url=exam-simulator/index.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#091019">
+  <title>AB-731 Mission Control</title>
+  <style>
+    :root {
+      --ink: #eaf3f7;
+      --muted: #8da3ad;
+      --dim: #526873;
+      --bg: #071017;
+      --panel: #0d1820;
+      --panel-2: #12212b;
+      --line: rgba(184, 222, 232, .12);
+      --cyan: #59e1ff;
+      --lime: #c8ff58;
+      --orange: #ffb257;
+      --red: #ff6b78;
+      --good: #71e6a2;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .34);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(89,225,255,.12), transparent 30rem),
+        radial-gradient(circle at 92% 90%, rgba(200,255,88,.08), transparent 32rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+    [hidden] { display: none !important; }
+
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; opacity: .16; z-index: 20;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+    }
+
+    .shell { min-height: 100vh; }
+    .view { animation: rise .42s cubic-bezier(.2,.8,.2,1); }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+
+    /* START */
+    .start {
+      min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(360px, .8fr);
+      max-width: 1480px; margin: 0 auto; padding: 32px;
+    }
+    .hero { padding: clamp(36px, 7vw, 108px); display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow { color: var(--cyan); font: 700 12px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .18em; text-transform: uppercase; }
+    .hero h1 { margin: 24px 0 22px; max-width: 860px; font-size: clamp(54px, 7.5vw, 108px); line-height: .88; letter-spacing: -.065em; font-weight: 780; }
+    .hero h1 span { color: var(--lime); display: block; }
+    .hero-copy { max-width: 650px; color: var(--muted); font-size: clamp(17px, 2vw, 21px); line-height: 1.6; }
+    .hero-metrics { display: flex; gap: 34px; margin-top: 54px; flex-wrap: wrap; }
+    .hero-metric strong { display: block; font-size: 26px; letter-spacing: -.04em; }
+    .hero-metric span { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+
+    .launch-panel { align-self: center; padding: 34px; border: 1px solid var(--line); border-radius: 30px; background: rgba(13,24,32,.86); backdrop-filter: blur(20px); box-shadow: var(--shadow); }
+    .launch-panel h2 { margin: 0 0 7px; font-size: 28px; letter-spacing: -.03em; }
+    .launch-panel > p { margin: 0 0 28px; color: var(--muted); }
+    .mode-grid { display: grid; gap: 12px; }
+    .mode-card { display: block; cursor: pointer; }
+    .mode-card input { position: absolute; opacity: 0; }
+    .mode-body { position: relative; display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.018); transition: .2s; }
+    .mode-card input:checked + .mode-body { border-color: rgba(89,225,255,.65); background: rgba(89,225,255,.07); box-shadow: inset 0 0 0 1px rgba(89,225,255,.1); }
+    .mode-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--panel-2); color: var(--cyan); font-weight: 800; }
+    .mode-copy b { display: block; margin-bottom: 3px; }
+    .mode-copy small { color: var(--muted); line-height: 1.35; display: block; }
+    .radio-dot { width: 16px; height: 16px; border: 2px solid var(--dim); border-radius: 50%; }
+    input:checked + .mode-body .radio-dot { border: 5px solid var(--cyan); }
+    .launch-options { display: flex; gap: 18px; margin: 22px 2px 26px; color: var(--muted); font-size: 13px; }
+    .check { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+    .check input { accent-color: var(--cyan); }
+    .primary { width: 100%; border: 0; border-radius: 15px; padding: 16px 20px; cursor: pointer; background: var(--lime); color: #10200a; font-weight: 800; letter-spacing: -.01em; transition: transform .18s, box-shadow .18s; }
+    .primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(200,255,88,.18); }
+    .resume { margin-top: 11px; width: 100%; padding: 13px; border: 1px solid var(--line); background: transparent; border-radius: 13px; cursor: pointer; color: var(--muted); }
+
+    /* EXAM */
+    .exam { min-height: 100vh; display: grid; grid-template-columns: 286px minmax(0, 1fr); }
+    .rail { position: sticky; top: 0; height: 100vh; padding: 26px 22px; border-right: 1px solid var(--line); background: rgba(7,16,23,.86); backdrop-filter: blur(18px); display: flex; flex-direction: column; z-index: 5; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 760; letter-spacing: -.02em; }
+    .brandmark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 11px; color: #071017; background: linear-gradient(135deg, var(--cyan), var(--lime)); font-weight: 900; font-size: 13px; }
+    .rail-meta { margin: 30px 0 16px; display: flex; align-items: end; justify-content: space-between; }
+    .rail-meta strong { font-size: 34px; letter-spacing: -.05em; }
+    .rail-meta span { color: var(--muted); font-size: 12px; }
+    .bar { height: 6px; background: var(--panel-2); border-radius: 10px; overflow: hidden; }
+    .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cyan), var(--lime)); transition: width .35s; }
+    .palette-label { margin: 30px 0 12px; color: var(--dim); font: 700 10px/1 ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; }
+    .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; overflow: auto; padding: 2px 2px 12px; }
+    .qdot { aspect-ratio: 1; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--muted); cursor: pointer; font-size: 11px; position: relative; transition: .18s; }
+    .qdot:hover { border-color: var(--cyan); color: var(--ink); }
+    .qdot.current { color: #071017; background: var(--cyan); border-color: var(--cyan); font-weight: 800; }
+    .qdot.answered:not(.current) { color: var(--ink); background: rgba(200,255,88,.10); border-color: rgba(200,255,88,.35); }
+    .qdot.flagged::after { content: ""; width: 5px; height: 5px; background: var(--orange); border-radius: 50%; position: absolute; right: 4px; top: 4px; }
+    .legend { display: flex; gap: 13px; color: var(--dim); font-size: 10px; margin-top: 6px; }
+    .legend span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 5px; background: var(--line); }
+    .legend .leg-a::before { background: var(--lime); }
+    .legend .leg-f::before { background: var(--orange); }
+    .rail-bottom { margin-top: auto; }
+    .shortcut { display: flex; justify-content: space-between; color: var(--dim); font-size: 11px; margin: 8px 0; }
+    kbd { border: 1px solid var(--line); border-bottom-color: rgba(255,255,255,.2); padding: 2px 6px; border-radius: 5px; color: var(--muted); background: var(--panel); }
+
+    .workspace { min-width: 0; display: flex; flex-direction: column; }
+    .topbar { min-height: 86px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 18px clamp(24px, 5vw, 70px); border-bottom: 1px solid var(--line); }
+    .domain { color: var(--cyan); font: 700 11px/1.4 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .12em; }
+    .timer { display: flex; align-items: center; gap: 9px; padding: 10px 15px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); font: 700 14px/1 ui-monospace, monospace; }
+    .timer::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 12px var(--good); }
+    .timer.urgent { color: var(--red); }
+    .timer.urgent::before { background: var(--red); box-shadow: 0 0 12px var(--red); animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: .2; } }
+    .top-actions { justify-self: end; display: flex; gap: 9px; }
+    .ghost { border: 1px solid var(--line); background: transparent; border-radius: 11px; padding: 10px 13px; cursor: pointer; color: var(--muted); }
+    .ghost:hover { color: var(--ink); border-color: var(--dim); }
+    .flag.active { color: var(--orange); border-color: rgba(255,178,87,.45); background: rgba(255,178,87,.07); }
+
+    .stage { width: min(900px, calc(100% - 48px)); margin: auto; padding: 58px 0 42px; }
+    .question-head { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin-bottom: 24px; }
+    .question-number { color: var(--muted); font: 650 13px/1 ui-monospace, monospace; letter-spacing: .05em; }
+    .question-points { color: var(--dim); font-size: 12px; }
+    .question { margin: 0 0 34px; font-size: clamp(25px, 3vw, 38px); line-height: 1.28; letter-spacing: -.035em; font-weight: 650; }
+    .answers { display: grid; gap: 11px; }
+    .answer { width: 100%; display: grid; grid-template-columns: 42px 1fr 22px; gap: 14px; align-items: center; text-align: left; padding: 17px 18px; border: 1px solid var(--line); border-radius: 15px; background: rgba(13,24,32,.68); cursor: pointer; transition: transform .16s, border-color .16s, background .16s; }
+    .answer:hover { transform: translateX(4px); border-color: rgba(89,225,255,.44); background: var(--panel-2); }
+    .answer.selected { border-color: var(--cyan); background: rgba(89,225,255,.08); }
+    .answer.correct { border-color: var(--good); background: rgba(113,230,162,.08); }
+    .answer.wrong { border-color: var(--red); background: rgba(255,107,120,.08); }
+    .letter { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); font: 700 12px/1 ui-monospace, monospace; }
+    .selected .letter { background: var(--cyan); color: #071017; border-color: var(--cyan); }
+    .correct .letter { background: var(--good); color: #071017; border-color: var(--good); }
+    .wrong .letter { background: var(--red); color: #071017; border-color: var(--red); }
+    .answer-text { line-height: 1.45; }
+    .answer-mark { font-weight: 900; }
+    .correct .answer-mark { color: var(--good); }
+    .wrong .answer-mark { color: var(--red); }
+    .explanation { margin-top: 22px; padding: 20px 22px; border: 1px solid rgba(113,230,162,.2); border-radius: 15px; background: rgba(113,230,162,.055); color: #c4d8d0; line-height: 1.6; }
+    .explanation b { color: var(--good); display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+    .stage-footer { width: min(900px, calc(100% - 48px)); margin: 0 auto; padding: 20px 0 34px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; }
+    .navbtn { min-width: 120px; border: 1px solid var(--line); border-radius: 13px; padding: 13px 17px; background: var(--panel); cursor: pointer; font-weight: 700; }
+    .navbtn:hover { border-color: var(--cyan); }
+    .navbtn.next { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+    /* RESULTS */
+    .results { min-height: 100vh; display: grid; place-items: center; padding: 44px 24px; }
+    .result-wrap { width: min(1050px, 100%); }
+    .result-top { display: grid; grid-template-columns: .8fr 1.2fr; gap: 54px; align-items: center; padding: 42px; border: 1px solid var(--line); border-radius: 28px; background: rgba(13,24,32,.78); box-shadow: var(--shadow); }
+    .score-ring { --score: 0; width: min(270px, 70vw); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; margin: auto; background: conic-gradient(var(--lime) calc(var(--score) * 1%), var(--panel-2) 0); position: relative; }
+    .score-ring::after { content: ""; position: absolute; inset: 13px; border-radius: 50%; background: var(--panel); }
+    .score-inner { z-index: 1; text-align: center; }
+    .score-inner strong { display: block; font-size: 68px; letter-spacing: -.07em; line-height: 1; }
+    .score-inner span { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .16em; }
+    .result-copy .eyebrow { color: var(--lime); }
+    .result-copy h2 { margin: 14px 0; font-size: clamp(38px, 5vw, 62px); line-height: 1; letter-spacing: -.055em; }
+    .result-copy > p { color: var(--muted); font-size: 17px; line-height: 1.55; }
+    .result-stats { display: flex; gap: 30px; margin: 28px 0; }
+    .result-stats strong { display: block; font-size: 24px; }
+    .result-stats span { color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+    .result-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .result-actions .primary { width: auto; }
+    .breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+    .domain-card { padding: 21px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); }
+    .domain-card small { color: var(--muted); line-height: 1.4; display: block; min-height: 34px; }
+    .domain-score { display: flex; align-items: baseline; justify-content: space-between; margin: 16px 0 8px; }
+    .domain-score strong { font-size: 25px; }
+    .domain-score span { color: var(--dim); font-size: 12px; }
+    .review-list { margin-top: 16px; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+    .review-item { display: grid; grid-template-columns: 50px 1fr auto; gap: 16px; align-items: center; padding: 16px 20px; background: var(--panel); border-bottom: 1px solid var(--line); cursor: pointer; }
+    .review-item:last-child { border-bottom: 0; }
+    .review-item:hover { background: var(--panel-2); }
+    .review-status { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-weight: 900; background: rgba(255,107,120,.1); color: var(--red); }
+    .review-status.ok { background: rgba(113,230,162,.1); color: var(--good); }
+    .review-q { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .review-domain { color: var(--dim); font-size: 11px; }
+
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); padding: 11px 16px; border-radius: 11px; background: var(--ink); color: var(--bg); font-weight: 700; font-size: 13px; opacity: 0; pointer-events: none; transition: .25s; z-index: 40; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 900px) {
+      .start { grid-template-columns: 1fr; padding: 18px; }
+      .hero { padding: 52px 14px 32px; }
+      .hero-metrics { margin-top: 28px; }
+      .launch-panel { width: 100%; }
+      .exam { grid-template-columns: 1fr; }
+      .rail { position: static; height: auto; padding: 14px 18px; border-right: 0; border-bottom: 1px solid var(--line); flex-direction: row; align-items: center; gap: 15px; }
+      .rail-meta { margin: 0 0 0 auto; display: block; }
+      .rail-meta strong { font-size: 18px; }
+      .rail-meta span, .rail .bar, .palette-label, .palette, .legend, .rail-bottom { display: none; }
+      .topbar { min-height: 70px; padding: 12px 18px; grid-template-columns: 1fr auto; }
+      .topbar .domain { display: none; }
+      .timer { justify-self: start; }
+      .stage { padding-top: 36px; }
+      .result-top { grid-template-columns: 1fr; padding: 28px 20px; gap: 34px; }
+      .breakdown { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .hero h1 { font-size: 54px; }
+      .launch-panel { padding: 22px; }
+      .top-actions .end-label { display: none; }
+      .question { font-size: 25px; }
+      .answer { grid-template-columns: 36px 1fr 18px; padding: 14px; gap: 10px; }
+      .stage, .stage-footer { width: min(100% - 28px, 900px); }
+      .result-stats { gap: 18px; }
+      .review-domain { display: none; }
+      .review-item { grid-template-columns: 40px 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <main class="shell">
+    <section id="startView" class="start view">
+      <div class="hero">
+        <div class="eyebrow">Microsoft certification // AB-731</div>
+        <h1>Lead the <span>AI shift.</span></h1>
+        <p class="hero-copy">A sharp, scenario-led simulator for AI Transformation Leaders. Make the call, test your judgment, and find the gaps before exam day.</p>
+        <div class="hero-metrics">
+          <div class="hero-metric"><strong>32</strong><span>Original scenarios</span></div>
+          <div class="hero-metric"><strong>3</strong><span>Skill domains</span></div>
+          <div class="hero-metric"><strong>45m</strong><span>Exam mode</span></div>
+        </div>
+      </div>
+      <aside class="launch-panel">
+        <h2>Configure your run</h2>
+        <p>Choose how you want feedback delivered.</p>
+        <div class="mode-grid">
+          <label class="mode-card">
+            <input type="radio" name="mode" value="practice" checked>
+            <span class="mode-body"><span class="mode-icon">01</span><span class="mode-copy"><b>Practice mode</b><small>Immediate feedback and explanations</small></span><span class="radio-dot"></span></span>
+          </label>
+          <label class="mode-card">
+            <input type="radio" name="mode" value="exam">
+            <span class="mode-body"><span class="mode-icon">02</span><span class="mode-copy"><b>Exam mode</b><small>45-minute timer, results at the end</small></span><span class="radio-dot"></span></span>
+          </label>
+        </div>
+        <div class="launch-options">
+          <label class="check"><input id="shuffle" type="checkbox"> Shuffle questions</label>
+          <label class="check"><input id="shuffleAnswers" type="checkbox" checked> Shuffle answers</label>
+        </div>
+        <button class="primary" id="startBtn">Launch simulation <span aria-hidden="true">→</span></button>
+        <button class="resume" id="resumeBtn" hidden>Resume saved session</button>
+      </aside>
+    </section>
+
+    <section id="examView" class="exam view" hidden>
+      <aside class="rail">
+        <div class="brand"><span class="brandmark">AB</span><span>Mission Control</span></div>
+        <div class="rail-meta"><strong id="progressCount">0/32</strong><span>answered</span></div>
+        <div class="bar"><i id="progressBar"></i></div>
+        <div class="palette-label">Question navigator</div>
+        <div class="palette" id="palette"></div>
+        <div class="legend"><span class="leg-a">Answered</span><span class="leg-f">Flagged</span></div>
+        <div class="rail-bottom">
+          <div class="shortcut"><span>Select answer</span><span><kbd>1</kbd>–<kbd>4</kbd></span></div>
+          <div class="shortcut"><span>Navigate</span><span><kbd>←</kbd> <kbd>→</kbd></span></div>
+          <div class="shortcut"><span>Flag</span><kbd>F</kbd></div>
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="topbar">
+          <div class="domain" id="domainLabel"></div>
+          <div class="timer" id="timer">45:00</div>
+          <div class="top-actions">
+            <button class="ghost flag" id="flagBtn" title="Flag question (F)">⚑ <span class="end-label">Flag</span></button>
+            <button class="ghost" id="finishBtn"><span class="end-label">Finish exam</span><span aria-hidden="true"> ↗</span></button>
+          </div>
+        </header>
+        <section class="stage" aria-live="polite">
+          <div class="question-head"><span class="question-number" id="questionNumber"></span><span class="question-points">Select one answer</span></div>
+          <h2 class="question" id="questionText"></h2>
+          <div class="answers" id="answers"></div>
+          <div class="explanation" id="explanation" hidden></div>
+        </section>
+        <footer class="stage-footer">
+          <button class="navbtn" id="prevBtn">← Previous</button>
+          <button class="navbtn next" id="nextBtn">Next →</button>
+        </footer>
+      </div>
+    </section>
+
+    <section id="resultsView" class="results view" hidden>
+      <div class="result-wrap">
+        <div class="result-top">
+          <div class="score-ring" id="scoreRing"><div class="score-inner"><strong id="scorePct">0%</strong><span>Final score</span></div></div>
+          <div class="result-copy">
+            <div class="eyebrow">Simulation complete</div>
+            <h2 id="resultHeadline">Run complete.</h2>
+            <p id="resultMessage"></p>
+            <div class="result-stats">
+              <div><strong id="correctStat">0</strong><span>Correct</span></div>
+              <div><strong id="wrongStat">0</strong><span>Incorrect</span></div>
+              <div><strong id="timeStat">0:00</strong><span>Time used</span></div>
+            </div>
+            <div class="result-actions">
+              <button class="primary" id="retryMissed">Retry missed</button>
+              <button class="ghost" id="restartBtn">New simulation</button>
+            </div>
+          </div>
+        </div>
+        <div class="breakdown" id="breakdown"></div>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+    </section>
+  </main>
+  <div class="toast" id="toast"></div>
+
+  <script>
+  const DOMAINS = {
+    value: "Business value of generative AI",
+    apps: "Microsoft AI apps and services",
+    adoption: "Implementation, responsible AI, and adoption"
+  };
+
+  const BANK = [
+    {d:"value",q:"A retailer wants to create several natural-language product descriptions from structured catalog data. Which type of AI is the best fit?",a:["Generative AI","Clustering","Anomaly detection","Regression"],c:0,e:"Generative AI creates new natural-language content from supplied information."},
+    {d:"value",q:"An organization needs a chatbot to answer questions using policies that change every week, without retraining after every update. What should it use?",a:["Fine-tuning only","Retrieval-augmented generation (RAG)","Image classification","Unsupervised clustering"],c:1,e:"RAG retrieves current material at response time, avoiding frequent model retraining."},
+    {d:"value",q:"A team is estimating the operating cost of a generative AI assistant. Which measurement is most directly associated with model-inference consumption?",a:["Number of database tables","Number of input and output tokens","Number of user departments","Number of training labels"],c:1,e:"Input and output token volume is a common driver of model inference cost."},
+    {d:"value",q:"A model confidently invents a supplier policy that does not exist. Which generative AI challenge does this demonstrate?",a:["Overfitting","Fabrication","Encryption failure","Data duplication"],c:1,e:"A plausible but unsupported statement is a fabrication, often called a hallucination."},
+    {d:"value",q:"A support team wants more consistent responses from an AI assistant. Which prompt change is most likely to help?",a:["Remove all context","State the role, task, constraints, and output format","Use unrelated technical jargon","Ask several unrelated questions at once"],c:1,e:"Explicit context, constraints, and output structure improve consistency."},
+    {d:"value",q:"A bank wants an assistant to cite approved internal procedures when answering employees. What is the primary purpose of grounding?",a:["Make the model larger","Connect responses to relevant, authoritative information","Eliminate authentication","Convert prompts into images"],c:1,e:"Grounding anchors responses in relevant authoritative sources."},
+    {d:"value",q:"A company has a stable set of specialized examples and needs a model to consistently adopt a particular task behavior. What may be appropriate after simpler prompting has been evaluated?",a:["Fine-tuning","Removing evaluation data","Disabling monitoring","Increasing user privileges"],c:0,e:"Fine-tuning can specialize behavior when prompting or grounding alone is insufficient."},
+    {d:"value",q:"Which dataset characteristic most directly helps reduce systematic performance differences among demographic groups?",a:["It is representative of affected users","It is stored in one file","It contains the longest records","It has no documented origin"],c:0,e:"Representative data helps reveal and reduce uneven performance across affected groups."},
+    {d:"value",q:"A manufacturer wants to predict equipment failure from historical sensor readings. Which capability is the best fit?",a:["Predictive machine learning","Text summarization","Image generation","Language translation"],c:0,e:"Historical sensor patterns can support prediction of future failures."},
+    {d:"value",q:"Which sequence best represents a machine-learning lifecycle?",a:["Deploy, delete data, define the problem","Define the problem, prepare data, train and evaluate, deploy, monitor","Buy licenses, deploy, determine the need","Train once, deploy, stop measuring"],c:1,e:"ML requires problem definition, data work, training, evaluation, deployment, and continued monitoring."},
+    {d:"value",q:"An AI application accesses confidential employee documents. Which control most directly limits each user to information they are permitted to access?",a:["Role-based authorization","A longer system prompt","A larger context window","A lower model temperature"],c:0,e:"Authorization enforces which protected resources an authenticated user may access."},
+    {d:"value",q:"Which measure provides the strongest evidence that an AI initiative creates business value?",a:["Largest parameter count","Outcomes compared with a baseline and business KPI","Mandatory immediate adoption","Use of the newest model"],c:1,e:"Business value is demonstrated against a baseline with outcome-oriented measures."},
+    {d:"apps",q:"Employees want AI help drafting documents, summarizing meetings, and analyzing work content within Microsoft 365 apps. Which offering is most directly aligned?",a:["Microsoft 365 Copilot","Azure Vision","Azure AI Search alone","A custom vision model"],c:0,e:"Microsoft 365 Copilot provides assistance within Microsoft 365 work experiences."},
+    {d:"apps",q:"A business team wants to create an agent that answers common HR questions and triggers approved workflows with minimal custom code. Which product should it consider first?",a:["Microsoft Copilot Studio","Azure Vision","Microsoft Paint","A regression model"],c:0,e:"Copilot Studio supports building and orchestrating agents and workflows with low-code tools."},
+    {d:"apps",q:"An assistant needs organizational context about users, meetings, files, and messages while respecting Microsoft 365 permissions. Which service supplies this connected context?",a:["Microsoft Graph","Azure Vision","A public web crawler","A spreadsheet macro"],c:0,e:"Microsoft Graph exposes connected Microsoft 365 context subject to permissions."},
+    {d:"apps",q:"A user must investigate a complex subject by finding, synthesizing, and citing information from multiple sources. Which Copilot capability is the better fit?",a:["Researcher","Analyst","Azure Vision","Image classification"],c:0,e:"Researcher is designed for multi-source research and synthesis."},
+    {d:"apps",q:"A finance user needs help examining datasets, finding patterns, and producing data-driven insights. Which Copilot capability is the better fit?",a:["Researcher","Analyst","Azure Vision","Speech synthesis"],c:1,e:"Analyst is designed for analytical work over data."},
+    {d:"apps",q:"A company needs an enterprise search layer that can index content and support vector and semantic retrieval for a RAG solution. Which service is most appropriate?",a:["Azure AI Search","Microsoft Teams Phone","Azure Vision only","Microsoft Forms only"],c:0,e:"Azure AI Search supports indexing and retrieval patterns commonly used in RAG."},
+    {d:"apps",q:"A quality-control process must extract information from product images. Which Foundry Tool capability is most relevant?",a:["Azure Vision in Foundry Tools","Microsoft Graph calendar data","Copilot meeting recap","Email transport rules"],c:0,e:"Azure Vision capabilities analyze and extract information from images."},
+    {d:"apps",q:"A standard productivity need is already addressed by a supported Microsoft AI product. What is generally the best first decision?",a:["Buy and configure the supported capability","Train a foundation model from scratch","Build a duplicate before evaluating products","Avoid defining requirements"],c:0,e:"An existing supported capability is normally evaluated before undertaking a custom build."},
+    {d:"apps",q:"A company uses Microsoft 365 Copilot but needs it to interact with a specialized internal process. Which strategy should be evaluated?",a:["Use the Copilot extensibility framework","Replace all Microsoft 365 services","Remove identity controls","Publish confidential data publicly"],c:0,e:"Extensibility connects Copilot to organization-specific knowledge, actions, and processes."},
+    {d:"apps",q:"Why might an organization select Microsoft Foundry for a custom enterprise AI solution?",a:["It supports selecting, building, evaluating, deploying, and governing AI at scale","It guarantees every response","It removes security requirements","It makes business requirements unnecessary"],c:0,e:"Microsoft Foundry supports the enterprise AI development and operations lifecycle."},
+    {d:"apps",q:"A team must select between several models for a customer-facing workload. What should drive the decision?",a:["Fit to quality, latency, cost, safety, modality, and deployment needs","Model name alone","Highest parameter count always","First model in the catalog"],c:0,e:"Model selection should be a requirements-based tradeoff, not a size or branding contest."},
+    {d:"apps",q:"What is a key risk-mitigation benefit of an integrated Microsoft AI solution?",a:["Existing identity, permission, compliance, and security controls can be applied consistently","Everyone gains access to all data","Monitoring is unnecessary","Accountability transfers to the model"],c:0,e:"Integration can preserve established identity, permission, compliance, and security boundaries."},
+    {d:"adoption",q:"Which action should occur before an organization deploys AI broadly?",a:["Define governance, acceptable-use rules, ownership, and escalation paths","Give systems unrestricted access","Remove human review from high-impact decisions","Wait years to define success"],c:0,e:"Clear rules, decision rights, and escalation paths are foundations of governed adoption."},
+    {d:"adoption",q:"What is the main purpose of an AI council?",a:["Provide cross-functional strategy, oversight, prioritization, and accountability","Write every employee prompt","Replace security and legal teams","Approve only expensive models"],c:0,e:"An AI council aligns multiple functions around strategy, risk, priorities, and accountability."},
+    {d:"adoption",q:"An automated screening tool performs worse for people with certain disabilities. Which responsible AI principle is most directly implicated?",a:["Fairness","Scalability","Compression","Availability pricing"],c:0,e:"Unequal performance across demographic groups is primarily a fairness concern."},
+    {d:"adoption",q:"Users cannot tell when content was generated by AI or how to challenge an outcome. Which principles most directly address this issue?",a:["Transparency and accountability","Tokenization and latency","Scalability and caching","Compression and clustering"],c:0,e:"Transparency helps people understand AI use; accountability establishes ownership and recourse."},
+    {d:"adoption",q:"A pilot works technically, but employees avoid the tool because they do not understand when or how to use it. What should the adoption team do next?",a:["Provide role-based training, use cases, feedback channels, and champions","Penalize non-users","Remove usage guidance","Expand without measuring"],c:0,e:"Role-specific enablement and feedback address practical adoption barriers."},
+    {d:"adoption",q:"What is the primary role of an AI champions program?",a:["Build peer advocacy, share practical knowledge, and surface feedback","Replace formal governance","Grant unrestricted sensitive-data access","Eliminate training"],c:0,e:"Champions help colleagues learn, normalize useful practices, and relay frontline feedback."},
+    {d:"adoption",q:"Which approach best supports a responsible rollout?",a:["Prioritize use cases, pilot with measures, learn, and scale in stages","Deploy every use case simultaneously","Skip low-code risk assessment","Hide success criteria"],c:0,e:"A measured pilot-and-scale approach improves learning and limits unmanaged risk."},
+    {d:"adoption",q:"A workload has variable demand and the organization wants spending to track actual usage. Which commercial model is most suitable?",a:["Pay-as-you-go","A maximum-use commitment tier","An unlimited free-license assumption","A perpetual hardware warranty"],c:0,e:"Pay-as-you-go is appropriate when consumption varies and cost should follow use."}
+  ];
+
+  const $ = id => document.getElementById(id);
+  let state = null, tick = null, toastTimer = null;
+  const letters = ["A","B","C","D"];
+  const storageKey = "ab731-simulator-v1";
+
+  function shuffled(arr) {
+    const out = [...arr];
+    for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
+    return out;
+  }
+
+  function makeRun(subset = null) {
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    let ids = subset || BANK.map((_, i) => i);
+    if ($("shuffle").checked) ids = shuffled(ids);
+    const answerOrders = {};
+    ids.forEach(id => answerOrders[id] = $("shuffleAnswers").checked ? shuffled([0,1,2,3]) : [0,1,2,3]);
+    return { mode, ids, answerOrders, pos: 0, answers: {}, flags: [], started: Date.now(), elapsed: 0, remaining: mode === "exam" ? 2700 : null, done: false };
+  }
+
+  function launch(run) {
+    state = run;
+    $("startView").hidden = true; $("resultsView").hidden = true; $("examView").hidden = false;
+    buildPalette(); render(); save(); startClock();
+  }
+
+  function startClock() {
+    clearInterval(tick);
+    tick = setInterval(() => {
+      state.elapsed++;
+      if (state.mode === "exam") {
+        state.remaining--;
+        if (state.remaining <= 0) { state.remaining = 0; finish(true); }
+      }
+      renderTimer();
+      if (state.elapsed % 5 === 0) save();
+    }, 1000);
+  }
+
+  function renderTimer() {
+    const seconds = state.mode === "exam" ? state.remaining : state.elapsed;
+    const m = Math.floor(seconds / 60), s = seconds % 60;
+    $("timer").textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    $("timer").classList.toggle("urgent", state.mode === "exam" && seconds <= 300);
+  }
+
+  function buildPalette() {
+    $("palette").innerHTML = state.ids.map((_, i) => `<button class="qdot" data-pos="${i}" aria-label="Go to question ${i+1}">${i+1}</button>`).join("");
+    $("palette").querySelectorAll("button").forEach(b => b.onclick = () => go(+b.dataset.pos));
+  }
+
+  function render() {
+    const id = state.ids[state.pos], item = BANK[id], chosen = state.answers[id], isPracticeAnswered = state.mode === "practice" && chosen !== undefined;
+    $("domainLabel").textContent = DOMAINS[item.d];
+    $("questionNumber").textContent = `QUESTION ${String(state.pos + 1).padStart(2,"0")} / ${String(state.ids.length).padStart(2,"0")}`;
+    $("questionText").textContent = item.q;
+    const order = state.answerOrders[id] || [0,1,2,3];
+    $("answers").innerHTML = order.map((original, visual) => {
+      let cls = "answer";
+      if (chosen === original) cls += " selected";
+      if (isPracticeAnswered && original === item.c) cls += " correct";
+      if (isPracticeAnswered && chosen === original && original !== item.c) cls += " wrong";
+      const mark = isPracticeAnswered && original === item.c ? "✓" : (isPracticeAnswered && chosen === original ? "×" : "");
+      return `<button class="${cls}" data-answer="${original}"><span class="letter">${letters[visual]}</span><span class="answer-text">${item.a[original]}</span><span class="answer-mark">${mark}</span></button>`;
+    }).join("");
+    $("answers").querySelectorAll("button").forEach(b => b.onclick = () => choose(+b.dataset.answer));
+    $("explanation").hidden = !isPracticeAnswered;
+    $("explanation").innerHTML = isPracticeAnswered ? `<b>${chosen === item.c ? "Correct reasoning" : "What to remember"}</b>${item.e}` : "";
+    $("flagBtn").classList.toggle("active", state.flags.includes(id));
+    $("flagBtn").innerHTML = `${state.flags.includes(id) ? "⚑" : "⚐"} <span class="end-label">${state.flags.includes(id) ? "Flagged" : "Flag"}</span>`;
+    $("prevBtn").disabled = state.pos === 0;
+    $("nextBtn").textContent = state.pos === state.ids.length - 1 ? "Finish →" : "Next →";
+    updateProgress(); renderTimer();
+  }
+
+  function updateProgress() {
+    const answered = state.ids.filter(id => state.answers[id] !== undefined).length;
+    $("progressCount").textContent = `${answered}/${state.ids.length}`;
+    $("progressBar").style.width = `${answered / state.ids.length * 100}%`;
+    $("palette").querySelectorAll(".qdot").forEach((b, i) => {
+      const id = state.ids[i];
+      b.classList.toggle("current", i === state.pos);
+      b.classList.toggle("answered", state.answers[id] !== undefined);
+      b.classList.toggle("flagged", state.flags.includes(id));
+    });
+  }
+
+  function choose(answer) {
+    const id = state.ids[state.pos];
+    if (state.mode === "practice" && state.answers[id] !== undefined) return;
+    state.answers[id] = answer; render(); save();
+  }
+
+  function go(pos) { state.pos = Math.max(0, Math.min(state.ids.length - 1, pos)); render(); save(); window.scrollTo({top:0,behavior:"smooth"}); }
+  function toggleFlag() { const id = state.ids[state.pos], i = state.flags.indexOf(id); i < 0 ? state.flags.push(id) : state.flags.splice(i,1); render(); save(); toast(i < 0 ? "Question flagged" : "Flag removed"); }
+
+  function finish(forced = false) {
+    const unanswered = state.ids.filter(id => state.answers[id] === undefined).length;
+    if (!forced && unanswered && !confirm(`You still have ${unanswered} unanswered question${unanswered === 1 ? "" : "s"}. Finish anyway?`)) return;
+    clearInterval(tick); state.done = true; localStorage.removeItem(storageKey);
+    $("examView").hidden = true; $("resultsView").hidden = false;
+    renderResults(); window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function renderResults() {
+    const correctIds = state.ids.filter(id => state.answers[id] === BANK[id].c);
+    const correct = correctIds.length, total = state.ids.length, pct = Math.round(correct / total * 100);
+    $("scorePct").textContent = `${pct}%`; $("scoreRing").style.setProperty("--score", pct);
+    $("correctStat").textContent = correct; $("wrongStat").textContent = total - correct; $("timeStat").textContent = formatDuration(state.elapsed);
+    const bands = pct >= 90 ? ["Commanding performance.","You are making consistently strong calls across the blueprint. Review the few misses, then take another shuffled run."] : pct >= 78 ? ["Strong trajectory.","Your foundation is solid. Focus your next pass on the lowest-scoring domain and flagged decisions."] : pct >= 63 ? ["Signal acquired.","You have the core ideas, but some judgment calls need tightening. Use the domain breakdown to target revision."] : ["Good first reconnaissance.","Treat this as a diagnostic. Review the rationales, revisit the official learning material, and run the missed set again."];
+    $("resultHeadline").textContent = bands[0]; $("resultMessage").textContent = bands[1];
+    $("breakdown").innerHTML = Object.entries(DOMAINS).map(([key, label]) => {
+      const ids = state.ids.filter(id => BANK[id].d === key), right = ids.filter(id => state.answers[id] === BANK[id].c).length, dpct = ids.length ? Math.round(right / ids.length * 100) : 0;
+      return `<article class="domain-card"><small>${label}</small><div class="domain-score"><strong>${dpct}%</strong><span>${right}/${ids.length}</span></div><div class="bar"><i style="width:${dpct}%"></i></div></article>`;
+    }).join("");
+    $("reviewList").innerHTML = state.ids.map((id, i) => {
+      const ok = state.answers[id] === BANK[id].c;
+      return `<div class="review-item" data-review="${i}" title="Review this question"><span class="review-status ${ok ? "ok" : ""}">${ok ? "✓" : "×"}</span><span class="review-q">${i+1}. ${BANK[id].q}</span><span class="review-domain">${DOMAINS[BANK[id].d]}</span></div>`;
+    }).join("");
+    $("reviewList").querySelectorAll(".review-item").forEach(el => el.onclick = () => reviewQuestion(+el.dataset.review));
+    const missed = state.ids.filter(id => state.answers[id] !== BANK[id].c);
+    $("retryMissed").disabled = missed.length === 0;
+    $("retryMissed").textContent = missed.length ? `Retry ${missed.length} missed` : "Perfect run";
+  }
+
+  function reviewQuestion(pos) { state.mode = "practice"; state.pos = pos; $("resultsView").hidden = true; $("examView").hidden = false; buildPalette(); render(); clearInterval(tick); toast("Review mode"); }
+  function formatDuration(sec) { const m = Math.floor(sec/60), s = sec%60; return `${m}:${String(s).padStart(2,"0")}`; }
+  function save() { if (state && !state.done) localStorage.setItem(storageKey, JSON.stringify(state)); }
+  function toast(msg) { clearTimeout(toastTimer); $("toast").textContent = msg; $("toast").classList.add("show"); toastTimer = setTimeout(() => $("toast").classList.remove("show"), 1600); }
+
+  $("startBtn").onclick = () => launch(makeRun());
+  $("resumeBtn").onclick = () => { try { launch(JSON.parse(localStorage.getItem(storageKey))); } catch { localStorage.removeItem(storageKey); location.reload(); } };
+  $("flagBtn").onclick = toggleFlag;
+  $("finishBtn").onclick = () => finish(false);
+  $("prevBtn").onclick = () => go(state.pos - 1);
+  $("nextBtn").onclick = () => state.pos === state.ids.length - 1 ? finish(false) : go(state.pos + 1);
+  $("restartBtn").onclick = () => { $("resultsView").hidden = true; $("startView").hidden = false; state = null; window.scrollTo(0,0); };
+  $("retryMissed").onclick = () => { const missed = state.ids.filter(id => state.answers[id] !== BANK[id].c); if (!missed.length) return; document.querySelector('input[value="practice"]').checked = true; launch(makeRun(missed)); };
+
+  document.addEventListener("keydown", e => {
+    if ($("examView").hidden || e.target.matches("input")) return;
+    const order = state.answerOrders[state.ids[state.pos]];
+    if (["1","2","3","4"].includes(e.key)) choose(order[+e.key - 1]);
+    else if (e.key === "ArrowRight") go(state.pos + 1);
+    else if (e.key === "ArrowLeft") go(state.pos - 1);
+    else if (e.key.toLowerCase() === "f") toggleFlag();
+  });
+
+  if (localStorage.getItem(storageKey)) $("resumeBtn").hidden = false;
+  </script>
+</body>
+</html>

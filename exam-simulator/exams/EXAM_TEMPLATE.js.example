@@ -1,0 +1,69 @@
+window.EXAM_CATALOG = {
+  defaultExam: "xx-000",
+  exams: {
+    "xx-000": {
+      id: "xx-000",
+      version: "1.0.0",
+      code: "XX-000",
+      title: "Certification title",
+      heroTitle: "Build your<br><em>advantage.</em>",
+      description: "Short description shown on the launch screen.",
+      durationMinutes: 45,
+      source: "https://official-study-guide.example",
+      domains: {
+        domain_one: "First official skills domain",
+        domain_two: "Second official skills domain"
+      },
+      caseStudies: {
+        sample_case: {
+          title: "Organization and project",
+          body: `<p>Shared information used by two or more questions.</p>`
+        }
+      },
+      questions: [
+        {
+          id: "q001",
+          domain: "domain_one",
+          type: "single",
+          prompt: "A scenario with a business need and a meaningful constraint. What should you recommend?",
+          options: [
+            { id: "a", text: "Plausible option" },
+            { id: "b", text: "Best answer" },
+            { id: "c", text: "Plausible option that misses one requirement" },
+            { id: "d", text: "Plausible option for a different scenario" }
+          ],
+          answer: "b",
+          rationale: "Explain why this option best meets all stated requirements."
+        },
+        {
+          id: "q002",
+          domain: "domain_two",
+          type: "multi",
+          caseStudy: "sample_case",
+          prompt: "Which two actions should the organization perform?",
+          options: [
+            { id: "a", text: "Correct action" },
+            { id: "b", text: "Incorrect action" },
+            { id: "c", text: "Correct action" },
+            { id: "d", text: "Incorrect action" }
+          ],
+          answer: ["a", "c"],
+          rationale: "Explain both required selections."
+        },
+        {
+          id: "q003",
+          domain: "domain_two",
+          type: "order",
+          prompt: "Arrange the activities in the correct sequence.",
+          options: [
+            { id: "first", text: "First activity" },
+            { id: "second", text: "Second activity" },
+            { id: "third", text: "Third activity" }
+          ],
+          answer: ["first", "second", "third"],
+          rationale: "Explain why the sequence is appropriate."
+        }
+      ]
+    }
+  }
+};
