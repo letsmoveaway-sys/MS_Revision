@@ -1,7 +1,7 @@
 window.EXAM_CATALOG = window.EXAM_CATALOG || { defaultExam: "ab-900", exams: {} };
 window.EXAM_CATALOG.exams["ab-900"] = {
   id: "ab-900",
-  version: "1.0.0",
+  version: "1.1.0",
   code: "AB-900",
   title: "Copilot and Agent Administration Fundamentals",
   heroTitle: "Secure the<br><em>AI workplace.</em>",
@@ -93,8 +93,8 @@ window.EXAM_CATALOG.exams["ab-900"] = {
     {
       id:"c12",domain:"core",type:"single",
       prompt:"A security lead reviews Identity Secure Score. What does the score primarily provide?",
-      options:[{id:"a",text:"A guarantee that the tenant cannot be compromised"},{id:"b",text:"A measure and recommendations for improving identity security posture"},{id:"c",text:"A list of Copilot prompts"},{id:"d",text:"A replacement for audit logs"}],answer:"b",
-      rationale:"Identity Secure Score assesses identity-security posture and recommends improvements. It is guidance, not a guarantee or a substitute for monitoring."
+      options:[{id:"a",text:"A record of every successful and failed sign-in"},{id:"b",text:"A posture measure with recommended identity-security improvements"},{id:"c",text:"A risk level calculated for each individual sign-in"},{id:"d",text:"A list of users currently holding privileged roles"}],answer:"b",
+      rationale:"Identity Secure Score summarizes identity-security posture and suggests improvements. Sign-in logs and risk assessments answer narrower event-level questions; the score does not replace them."
     },
     {
       id:"c13",domain:"core",type:"single",
@@ -245,8 +245,8 @@ window.EXAM_CATALOG.exams["ab-900"] = {
     {
       id:"a05",domain:"administration",type:"single",
       prompt:"An administrator has purchased monthly Microsoft 365 Copilot licenses for a pilot group. What must happen before pilot users receive licensed capabilities?",
-      options:[{id:"a",text:"Assign the licenses directly or through a supported group"},{id:"b",text:"Make every SharePoint site public"},{id:"c",text:"Disable multifactor authentication"},{id:"d",text:"Register every user as an application"}],answer:"a",
-      rationale:"Purchased licenses must be assigned to the intended users, directly or by supported group-based licensing, with the required service plans enabled."
+      options:[{id:"a",text:"Assign licenses directly or through a supported group and verify the service plan"},{id:"b",text:"Add the users to a Teams team without assigning the license"},{id:"c",text:"Purchase more licenses but leave the pilot users unassigned"},{id:"d",text:"Give the pilot users a general administrator role instead of a license"}],answer:"a",
+      rationale:"Purchasing a license does not automatically entitle a user. The license and required service plan must be assigned to that user; team membership or an admin role is a different control."
     },
     {
       id:"a06",domain:"administration",type:"multi",
@@ -263,8 +263,8 @@ window.EXAM_CATALOG.exams["ab-900"] = {
     {
       id:"a08",domain:"administration",type:"single",
       prompt:"A user created a useful prompt and wants coworkers to reuse it. Which prompt-management action meets the requirement?",
-      options:[{id:"a",text:"Share the saved prompt with the intended coworkers"},{id:"b",text:"Create an Entra risky-user record"},{id:"c",text:"Apply a retention hold to every mailbox"},{id:"d",text:"Register the prompt as an enterprise application"}],answer:"a",
-      rationale:"Prompt-management capabilities include saving and sharing prompts for reuse, subject to the available product controls and permissions."
+      options:[{id:"a",text:"Share the saved prompt through the supported prompt-sharing control"},{id:"b",text:"Paste the prompt into a public page that anyone can edit"},{id:"c",text:"Give all coworkers access to the original user's Copilot account"},{id:"d",text:"Assign every coworker an administrator role to view the prompt"}],answer:"a",
+      rationale:"Supported prompt sharing makes the prompt reusable by intended colleagues while keeping each person's own identity. A public editable page or shared account adds unnecessary access and loses ownership controls."
     },
     {
       id:"a09",domain:"administration",type:"single",caseStudy:"adventure",
@@ -292,9 +292,9 @@ window.EXAM_CATALOG.exams["ab-900"] = {
     },
     {
       id:"a13",domain:"administration",type:"single",
-      prompt:"An administrator wants to stop users from accessing a Copilot feature that the organization is not ready to support. What should the administrator do?",
-      options:[{id:"a",text:"Delete the users' Microsoft 365 accounts"},{id:"b",text:"Make all users Global Administrators"},{id:"c",text:"Remove every SharePoint site"},{id:"d",text:"Use the available administrative control to disable the feature for the intended scope"}],answer:"d",
-      rationale:"Where Microsoft provides a feature control, administrators should configure it for the relevant users or tenant scope rather than take disruptive unrelated actions."
+      prompt:"A new Copilot feature is ready for a small pilot, but the rest of the tenant should not use it yet. A scoped administrative feature control is available. What should the administrator configure?",
+      options:[{id:"a",text:"Remove all Microsoft 365 licenses from users outside the pilot"},{id:"b",text:"Block sign-in to every Microsoft 365 app outside the pilot"},{id:"c",text:"Disable Copilot for the whole tenant and rely on the pilot to request exceptions"},{id:"d",text:"Set the feature control to the pilot scope and restrict the remaining users"}],answer:"d",
+      rationale:"A scoped feature control meets the pilot requirement without disrupting unrelated Microsoft 365 access. Removing licenses or blocking the whole suite would affect much more than the feature being evaluated."
     }
   ]
 };

@@ -31,8 +31,10 @@ for (const [key, exam] of Object.entries(catalog.exams)) {
     if (new Set(optionIds).size !== optionIds.length) errors.push(`${prefix}: option IDs must be unique.`);
     const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
     answers.forEach(answer => { if (!optionIds.includes(answer)) errors.push(`${prefix}: answer '${answer}' is not an option.`); });
+    if (new Set(answers).size !== answers.length) errors.push(`${prefix}: answer IDs must be unique.`);
     if (q.type === "single" && Array.isArray(q.answer)) errors.push(`${prefix}: single questions require one answer ID.`);
     if (["multi", "order"].includes(q.type) && !Array.isArray(q.answer)) errors.push(`${prefix}: ${q.type} questions require an answer array.`);
+    if (q.type === "multi" && (answers.length < 2 || answers.length >= optionIds.length)) errors.push(`${prefix}: multi questions need at least two correct options and at least one incorrect option.`);
     if (q.type === "order" && answers.length !== optionIds.length) errors.push(`${prefix}: an order answer must include every option.`);
     if (q.caseStudy && !exam.caseStudies[q.caseStudy]) errors.push(`${prefix}: unknown case study '${q.caseStudy}'.`);
     if (q.type === "single") singlePositions.push(optionIds.indexOf(q.answer));

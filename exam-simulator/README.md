@@ -23,6 +23,8 @@ No API keys or server are needed. Practice progress is stored in the visitor's b
 
 The engine never displays choice answers in source order. It creates and saves a randomized option order for every run, so the position of a correct answer cannot become a learnable pattern. Case-study questions remain grouped when question order is shuffled.
 
+The banks use original scenario questions, select-one and select-multiple choices, build lists, and shared case studies. They are practice material, not copies of Microsoft exam items or a guarantee of the exact format on test day. Microsoft says exams can include other interaction types and does not publish a fixed question-type mix; use the [official exam sandbox](https://learn.microsoft.com/en-us/credentials/certifications/prepare-exam) to experience those interactions.
+
 ## Supported question formats
 
 - `single`: one correct option; feedback is immediate in Practice mode.
@@ -83,7 +85,7 @@ The bank has 45 independently written items, following the [Microsoft SC-500 stu
 - 11 questions: compute and AI workloads (24.4%)
 - 11 questions: security posture and monitoring (24.4%)
 
-The four domains fall within the guide's 20–25%, 25–30%, 20–25%, and 20–25% ranges. Questions include shared scenarios, multi-select, and build-list items.
+The four domains fall within the guide's 20–25%, 25–30%, 20–25%, and 20–25% ranges. The bank has 32 single-answer, 10 multi-select, and 3 build-list questions; 9 questions share case studies.
 
 ### AI-103
 
@@ -95,7 +97,7 @@ The bank has 45 independently written items, following the [Microsoft AI-103 stu
 - 6 questions: text and speech analysis (13.3%)
 - 6 questions: information extraction and grounding (13.3%)
 
-The five domains fall within the guide's 25–30%, 30–35%, 10–15%, 10–15%, and 10–15% ranges. Questions include shared scenarios, multi-select, and build-list items.
+The five domains fall within the guide's 25–30%, 30–35%, 10–15%, 10–15%, and 10–15% ranges. The bank has 30 single-answer, 11 multi-select, and 4 build-list questions; 11 questions share case studies.
 
 For every exam, Practice mode reveals the correct answer and explanation after a single-choice answer or after **Check answer** for multi-select and build-list questions. Exam simulation reveals them during results review. The explanation panel links to that exam's Microsoft Learn outline for further study. The new SC-500 and AI-103 rationales also explain why a tempting alternative does not meet the requirement.
 

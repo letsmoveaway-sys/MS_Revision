@@ -1,7 +1,7 @@
 window.EXAM_CATALOG = window.EXAM_CATALOG || { defaultExam: "ab-731", exams: {} };
 window.EXAM_CATALOG.exams["ab-731"] = {
       id: "ab-731",
-      version: "2.0.0",
+      version: "2.1.0",
       code: "AB-731",
       title: "AI Transformation Leader",
       heroTitle: "Lead the<br><em>AI shift.</em>",
@@ -123,8 +123,8 @@ window.EXAM_CATALOG.exams["ab-731"] = {
         {
           id:"v17",domain:"value",type:"single",
           prompt:"A writing assistant repeatedly suggests language that excludes people with disabilities. Retraining would be costly and the company needs an immediate safeguard. What should it implement first?",
-          options:[{id:"a",text:"A higher token quota"},{id:"b",text:"A newer user interface"},{id:"c",text:"A larger context window"},{id:"d",text:"A content-safety filter with monitoring and escalation"}],answer:"d",
-          rationale:"A content-safety control can reduce harmful outputs quickly and should be paired with monitoring. Longer-term work may still be needed to address underlying data or model behavior."
+          options:[{id:"a",text:"Change the prompt wording only and skip output review"},{id:"b",text:"Wait for a future model retraining cycle"},{id:"c",text:"Use a larger model without checking its outputs"},{id:"d",text:"Add an output-safety review with monitoring and escalation"}],answer:"d",
+          rationale:"An output-safety review can detect and reduce harmful suggestions quickly, with monitoring to surface failures. Prompt changes and a larger model may help, but neither replaces checking actual outputs; longer-term work may still address the cause."
         },
 
         {
@@ -202,8 +202,8 @@ window.EXAM_CATALOG.exams["ab-731"] = {
         {
           id:"a13",domain:"apps",type:"single",
           prompt:"A supported Microsoft Copilot product meets 90% of a standard productivity requirement. The remaining requirement can be addressed through a supported extension. What should you recommend?",
-          options:[{id:"a",text:"Train a foundation model from scratch"},{id:"b",text:"Replace Microsoft 365"},{id:"c",text:"Build a duplicate product independently"},{id:"d",text:"Buy the existing capability and extend it"}],answer:"d",
-          rationale:"When a supported product covers the core need, buying and extending usually reduces time, cost, and operational burden compared with a full custom build."
+          options:[{id:"a",text:"Build a custom app for the entire requirement before testing the supported extension"},{id:"b",text:"Use the product without the required extension and change the business process"},{id:"c",text:"Train a separate model to replace the product's core features"},{id:"d",text:"Adopt the existing capability and implement the supported extension"}],answer:"d",
+          rationale:"When a supported product covers the core need and an extension meets the gap, adopting and extending it is usually faster to operate than rebuilding the whole experience. Using it unchanged would leave a stated requirement unmet."
         },
         {
           id:"a14",domain:"apps",type:"single",
@@ -213,9 +213,9 @@ window.EXAM_CATALOG.exams["ab-731"] = {
         },
         {
           id:"a15",domain:"apps",type:"single",
-          prompt:"Why can an integrated Microsoft AI solution reduce information-access risk compared with an isolated assistant?",
-          options:[{id:"a",text:"It can apply established identity, permission, compliance, and security controls"},{id:"b",text:"It automatically makes all organizational data public"},{id:"c",text:"It transfers accountability to the model provider"},{id:"d",text:"It removes the need for monitoring"}],answer:"a",
-          rationale:"Integration can preserve existing identity, authorization, compliance, and security boundaries. It does not eliminate organizational accountability."
+          prompt:"A company wants an AI assistant to answer from existing Microsoft 365 content without widening employee access. Which design choice most directly reduces information-access risk?",
+          options:[{id:"a",text:"Use integration that respects existing identity and content permissions"},{id:"b",text:"Copy all content into one index readable by every employee"},{id:"c",text:"Filter citations after generation but give the model unrestricted source content"},{id:"d",text:"Rely on the model to infer each user's permissions from the prompt"}],answer:"a",
+          rationale:"Permission-aware integration applies access checks before source content is used. A shared unrestricted index or post-generation citation filtering can expose information even when the final answer appears to cite only approved files."
         },
         {
           id:"a16",domain:"apps",type:"order",
@@ -256,9 +256,9 @@ window.EXAM_CATALOG.exams["ab-731"] = {
         },
         {
           id:"g05",domain:"adoption",type:"single",
-          prompt:"What is the primary purpose of an AI champions program?",
-          options:[{id:"a",text:"Replace formal governance and risk review"},{id:"b",text:"Approve access to confidential data"},{id:"c",text:"Build peer advocacy, share working practices, and surface frontline feedback"},{id:"d",text:"Eliminate the need for role-based training"}],answer:"c",
-          rationale:"Champions help colleagues adopt useful practices, provide local support, and relay practical feedback. They complement rather than replace governance and training."
+          prompt:"A Copilot pilot is technically sound, but employees struggle to find useful role-specific examples. What should the AI champions network do?",
+          options:[{id:"a",text:"Take over all security approvals from the governance team"},{id:"b",text:"Approve access to confidential source data for colleagues"},{id:"c",text:"Share practical examples, coach peers, and bring feedback to the rollout team"},{id:"d",text:"Replace structured training with only informal chat messages"}],answer:"c",
+          rationale:"Champions provide local examples and peer support while surfacing real workflow problems. They complement formal training and governance; they should not approve sensitive access or take over security decisions."
         },
         {
           id:"g06",domain:"adoption",type:"multi",
