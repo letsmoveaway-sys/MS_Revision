@@ -76,6 +76,8 @@ The bank has 45 independently written items:
 
 This matches the official domain ranges of 30–35%, 35–40%, and 25–30%. Its single-answer source key is evenly distributed across A–D, and display order is randomized independently for each attempt.
 
+The revised bank is scenario-led: it has 29 single-answer, 14 multi-select, and 2 build-list questions, with 9 questions grouped into three case studies. Distractors use adjacent Microsoft 365 controls so that most items require interpreting the requirement rather than recognizing an unrelated product name.
+
 ### SC-500
 
 The bank has 45 independently written items, following the [Microsoft SC-500 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-500):
