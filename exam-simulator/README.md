@@ -1,10 +1,10 @@
 # Certification Mission Control
 
-A dependency-free, reusable certification-practice engine for AB-731, AB-900, SC-500, and AI-103. Open `index.html` directly in a browser; no build step or web server is required. Choose an exam on the home screen before starting a practice or timed run. Each exam keeps its own saved session.
+A dependency-free, reusable certification-practice engine for AB-731, AB-900, SC-500, AI-103, and AI-901. Open `index.html` directly in a browser; no build step or web server is required. Choose an exam on the home screen before starting a practice or timed run. Each exam keeps its own saved session.
 
 ## Publish to GitHub Pages
 
-This repository includes `.github/workflows/pages.yml`, which validates all four question banks and publishes only the `exam-simulator` folder. Its `index.html` becomes the site home page, so visitors can choose any exam from one URL.
+This repository includes `.github/workflows/pages.yml`, which validates every question bank and publishes only the `exam-simulator` folder. Its `index.html` becomes the site home page, so visitors can choose any exam from one URL.
 
 1. Put this whole repository on GitHub with the site files and workflow on the `main` branch. If using GitHub's **Add file > Upload files**, include the hidden `.github` folder; otherwise the workflow will not be uploaded.
 2. In the GitHub repository, open **Settings > Pages** and set **Build and deployment > Source** to **GitHub Actions**.
@@ -99,15 +99,24 @@ The four domains fall within the guide's 20–25%, 25–30%, 20–25%, and 20–
 
 ### AI-103
 
-The bank has 45 independently written items, following the [Microsoft AI-103 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-103):
+The bank has 75 independently written items, following the [Microsoft AI-103 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-103) (skills measured as of 16 April 2026):
 
-- 12 questions: plan and manage Azure AI solutions (26.7%)
-- 15 questions: generative AI and agentic solutions (33.3%)
-- 6 questions: computer vision (13.3%)
-- 6 questions: text and speech analysis (13.3%)
-- 6 questions: information extraction and grounding (13.3%)
+- 20 questions: plan and manage Azure AI solutions (26.7%)
+- 25 questions: generative AI and agentic solutions (33.3%)
+- 10 questions: computer vision (13.3%)
+- 10 questions: text and speech analysis (13.3%)
+- 10 questions: information extraction and grounding (13.3%)
 
-The five domains fall within the guide's 25–30%, 30–35%, 10–15%, 10–15%, and 10–15% ranges. The bank has 30 single-answer, 11 multi-select, and 4 build-list questions; 11 questions share case studies.
+The five domains fall within the guide's 25–30%, 30–35%, 10–15%, 10–15%, and 10–15% ranges. Version 2.0.0 added 30 questions on deployment types (Global, Data Zone, Provisioned, Batch), Foundry RBAC roles, keyless authentication, Prompt Shields and other content safety features, version-upgrade policy and continuous evaluation, tracing and provenance, the Foundry SDK (AIProjectClient, agents, conversations), generation parameters, agent tools (Code Interpreter, Bing grounding, Azure AI Search, OpenAPI, MCP), reflection loops, multi-agent orchestration, agent evaluators, hybrid LLM and rules engines, video generation, Content Understanding pro mode, custom speech, speech translation, real-time audio, semantic ranker, skillsets and custom skills, integrated vectorization, and connecting agents to an index. The bank has 48 single-answer, 13 multi-select, 5 build-list, 4 Yes/No, and 5 matching questions; 11 questions share case studies. The timed run is 100 minutes.
+
+### AI-901
+
+The bank has 60 independently written items, following the [Microsoft AI-901 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-901) (skills measured as of 15 April 2026):
+
+- 26 questions: identify AI concepts and capabilities (43.3%)
+- 34 questions: implement AI solutions by using Microsoft Foundry (56.7%)
+
+This matches the official ranges of 40–45% and 55–60%. Coverage includes all six responsible AI principles, how generative models work, model selection and deployment parameters, AI workload identification, text analysis, speech, computer vision and image generation, prompts, deploying and testing models in the Foundry portal, Foundry SDK chat and agent clients, single-agent tools, Azure Speech, multimodal image and audio input, and Content Understanding for documents, images, audio, and video. The bank has 38 single-answer, 5 multi-select, 4 build-list, 8 Yes/No, and 5 matching questions, with 9 questions in two case studies.
 
 For every exam, Practice mode reveals the correct answer and explanation after a single-choice answer or after **Check answer** for multi-select and build-list questions. Exam simulation reveals them during results review. The explanation panel links to that exam's Microsoft Learn outline for further study. The new SC-500 and AI-103 rationales also explain why a tempting alternative does not meet the requirement.
 

@@ -32,6 +32,7 @@ jobs:
           node scripts/validate-exams.js exams/ab-900.js
           node scripts/validate-exams.js exams/sc-500.js
           node scripts/validate-exams.js exams/ai-103.js
+          node scripts/validate-exams.js exams/ai-901.js
         working-directory: exam-simulator
       - name: Configure Pages
         uses: actions/configure-pages@v5
