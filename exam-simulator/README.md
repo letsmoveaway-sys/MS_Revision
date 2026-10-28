@@ -30,7 +30,15 @@ The banks use original scenario questions, select-one and select-multiple choice
 - `single`: one correct option; feedback is immediate in Practice mode.
 - `multi`: a fixed number of correct options; the learner selects that number and checks the answer.
 - `order`: a build-list question; the learner arranges items and checks the answer.
+- `yesno`: a Yes/No statement set (shown as **HOTSPOT**). `options` holds the statements; `answer` is an object such as `{ s1: "no", s2: "yes" }`.
+- `match`: a drag-and-drop style matching question (shown as **DRAG DROP**, or set `label: "HOTSPOT"`). `options` holds the items, `choices` holds the targets, and `answer` maps each item ID to a choice ID.
 - Any question can reference a shared `caseStudy` entry.
+
+Yes/No and match questions are marked all-or-nothing in the score, like build lists.
+
+## Question bank view
+
+Pick **Question bank** on the home screen to browse every question as a numbered list (Question #1, #2, …) on a light page, ten per page. Each question shows its topic (skill domain), lettered choices, and a **Reveal Solution** button that shows the correct answer, explanation, and Microsoft Learn reference. You can filter by topic, select an answer before revealing to check yourself, or turn on **Show all solutions** for quick revision. Choice letters are shuffled each time the bank is opened.
 
 ## Add another exam
 
@@ -68,15 +76,15 @@ This matches the official domain ranges of 35–40%, 35–40%, and 20–25%. The
 
 ### AB-900
 
-The bank has 45 independently written items:
+The bank has 80 independently written items, following the [Microsoft AB-900 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-900) (skills measured as of 14 October 2026):
 
-- 15 questions: core Microsoft 365 services and security (33.3%)
-- 17 questions: data protection and governance (37.8%)
-- 13 questions: Copilot and agent administration (28.9%)
+- 26 questions: core Microsoft 365 services and security (32.5%)
+- 30 questions: data protection and governance (37.5%)
+- 24 questions: Copilot and agent administration (30.0%)
 
-This matches the official domain ranges of 30–35%, 35–40%, and 25–30%. Its single-answer source key is evenly distributed across A–D, and display order is randomized independently for each attempt.
+This matches the official domain ranges of 30–35%, 35–40%, and 25–30%. Version 3.0.0 added 35 questions for objectives that were thin or missing: authentication methods, Defender for Office 365 and threat analytics, Entra ID Protection and sign-in troubleshooting, Purview Audit, SharePoint sharing and storage objects, service plans, retention labels and precedence, records, trainable classifiers and exact data match, all six responsible AI principles, Defender for Cloud Apps, Restricted SharePoint Search, site access reviews, DSPM for AI, Copilot interaction retention, Copilot licence assignment, pay-as-you-go setup and metering, Copilot Studio Lite vs Copilot Studio vs SharePoint agents, Power Platform data policies and monitoring, agent sharing and access settings, saved and scheduled prompts, and where each Copilot control is configured.
 
-The revised bank is scenario-led: it has 29 single-answer, 14 multi-select, and 2 build-list questions, with 9 questions grouped into three case studies. Distractors use adjacent Microsoft 365 controls so that most items require interpreting the requirement rather than recognizing an unrelated product name.
+The bank has 48 single-answer, 15 multi-select, 3 build-list, 9 Yes/No, and 5 matching questions, with 9 questions grouped into three case studies.
 
 ### SC-500
 

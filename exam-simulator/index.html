@@ -31,6 +31,11 @@
           <span><b>Exam simulation</b><small>Timed attempt with feedback at the end</small></span>
           <i></i>
         </label>
+        <label class="mode">
+          <input type="radio" name="mode" value="bank">
+          <span><b>Question bank</b><small>Browse every numbered question and reveal solutions one at a time</small></span>
+          <i></i>
+        </label>
         <div class="toggles">
           <label><input id="shuffleQuestions" type="checkbox" checked> Shuffle questions</label>
           <label><input id="shuffleAnswers" type="checkbox" checked disabled> Shuffle answers</label>
@@ -100,6 +105,30 @@
         </div>
         <div id="domainResults" class="domain-results"></div>
         <div id="review" class="review"></div>
+      </div>
+    </section>
+
+    <section id="bank" class="bank" hidden>
+      <header class="bank-top">
+        <div class="bank-top-inner">
+          <span class="bank-brand">Practice Question Bank</span>
+          <button id="bankHome" class="bank-back">← Back to simulator</button>
+        </div>
+      </header>
+      <div class="bank-wrap">
+        <div class="bank-title">
+          <h1 id="bankTitle"></h1>
+          <p id="bankSubtitle"></p>
+          <div id="bankLegend" class="bank-legend"></div>
+        </div>
+        <div class="bank-toolbar">
+          <label class="bank-filter">Topic <select id="bankTopic" aria-label="Filter by topic"></select></label>
+          <label class="bank-toggle"><input type="checkbox" id="bankShowAll"> Show all solutions</label>
+          <span id="bankCount" class="bank-count"></span>
+        </div>
+        <div id="bankList" class="bank-list"></div>
+        <nav id="bankPager" class="bank-pager" aria-label="Question pages"></nav>
+        <p class="bank-footnote">Original practice questions written against the official Microsoft skills outline. Not actual exam content.</p>
       </div>
     </section>
   </main>
