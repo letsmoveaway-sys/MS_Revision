@@ -1,12 +1,12 @@
 window.EXAM_CATALOG = window.EXAM_CATALOG || { defaultExam: "ai-901", exams: {} };
 window.EXAM_CATALOG.exams["ai-901"] = {
   id: "ai-901",
-  version: "1.0.0",
+  version: "2.0.0",
   code: "AI-901",
   title: "Microsoft Azure AI Fundamentals",
   heroTitle: "Start building<br><em>with AI.</em>",
-  description: "Practise AI concepts, responsible AI, and hands-on Microsoft Foundry tasks: prompts, models, agents, speech, vision, and Content Understanding.",
-  durationMinutes: 45,
+  description: "Exam-difficulty practice on AI concepts, responsible AI, and hands-on Microsoft Foundry tasks: prompts, models, SDK code, agents, speech, vision, and Content Understanding.",
+  durationMinutes: 60,
   source: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-901",
   domains: {
     concepts: "Identify AI concepts and capabilities",
@@ -15,408 +15,589 @@ window.EXAM_CATALOG.exams["ai-901"] = {
   caseStudies: {
     travel: {
       title: "Contoso Travel assistant",
-      body: `<p>Contoso Travel is building a chat assistant in Microsoft Foundry. It must answer only travel questions, reply in British English, and remember details a customer gave earlier in the same chat, such as their destination. Developers write a small Python client by using the Foundry SDK, and later convert the assistant into an agent that can search Contoso's uploaded brochures.</p>`
+      body: `<p>Contoso Travel is building a customer assistant in Microsoft Foundry. Requirements:</p><ul><li>Answer only travel questions, in British English, and decline anything else politely.</li><li>Remember what a customer said earlier in the same chat, such as their destination.</li><li>Answer from Contoso's 200 brochure PDFs and cite them.</li><li>The production web app runs in Azure App Service and must not store any keys.</li></ul><p>The model is deployed in the project with the deployment name <code>travel-chat</code>.</p>`
     },
     insurer: {
       title: "Fabrikam Insurance claims",
-      body: `<p>Fabrikam Insurance receives repair invoices from garages, its own claim forms with company-specific fields, photos of vehicle damage, and recorded phone calls with customers. The team wants a lightweight app that extracts structured data from all of these inputs by using Azure Content Understanding in Foundry Tools.</p>`
+      body: `<p>Fabrikam Insurance receives garage repair invoices (PDF), its own claim forms with company-specific fields, photos of vehicle damage, dash-cam videos, and recorded customer phone calls.</p><p>Fabrikam wants one service that extracts a consistent set of fields from all of these inputs, including some values that are not written anywhere and must be inferred, such as damage severity. Developers want to write as little custom code as possible.</p>`
     }
   },
   questions: [
-    /* ===== Identify AI concepts and capabilities: 26 / 60 = 43.3% ===== */
+    /* ===== Identify AI concepts and capabilities: 34 / 80 = 42.5% ===== */
 
     // Responsible AI
     {
       id:"k01",domain:"concepts",type:"single",
-      prompt:"A loan-approval model approves fewer applicants from one postcode, even when their financial profiles are the same as applicants from other areas. Which responsible AI principle is most directly at risk?",
-      options:[{id:"a",text:"Fairness"},{id:"b",text:"Inclusiveness"},{id:"c",text:"Transparency"},{id:"d",text:"Reliability and safety"}],answer:"a",
-      rationale:"Fairness means AI systems should treat similar people in similar ways and avoid unjust differences between groups. Inclusiveness concerns designing for people with a wide range of abilities and backgrounds."
+      prompt:"A CV-screening model was trained mostly on applications from graduates of one university. It ranks equally experienced graduates from other universities lower. The team retrains it on a broader, balanced dataset. Which responsible AI principle does the retraining primarily address?",
+      options:[{id:"a",text:"Inclusiveness"},{id:"b",text:"Fairness"},{id:"c",text:"Reliability and safety"},{id:"d",text:"Accountability"}],answer:"b",
+      rationale:"Fairness is about the system treating similarly situated people in the same way. Here, equally qualified applicants get different outcomes depending on their group. Inclusiveness is the closest distractor, but it focuses on designing systems that people of all abilities and backgrounds can use and benefit from, rather than correcting biased outcomes."
     },
     {
       id:"k02",domain:"concepts",type:"single",
-      prompt:"Before launch, a medical triage chatbot is tested with unusual and ambiguous symptoms to make sure it behaves predictably and escalates to a clinician instead of guessing. Which principle does this testing support?",
-      options:[{id:"a",text:"Accountability"},{id:"b",text:"Reliability and safety"},{id:"c",text:"Privacy and security"},{id:"d",text:"Fairness"}],answer:"b",
-      rationale:"Reliability and safety means systems perform consistently, including in unexpected conditions, and fail safely. Testing edge cases and escalating to a person are typical safeguards."
+      prompt:"After an automated credit decision, customers can see the main factors that influenced the result and a plain-language explanation of how the system is used. Which principle does this most directly support?",
+      options:[{id:"a",text:"Accountability"},{id:"b",text:"Fairness"},{id:"c",text:"Transparency"},{id:"d",text:"Privacy and security"}],answer:"c",
+      rationale:"Transparency covers explaining how and why a system reaches its outputs, and being open about its use and limitations. Accountability is the closest distractor, but it is about which people are answerable for the system and how oversight works, not about explaining decisions to users."
     },
     {
       id:"k03",domain:"concepts",type:"single",
-      prompt:"An app analyses customers' recorded phone calls. The company encrypts the recordings, restricts who can access them, and asks for consent before recording. Which principle do these measures address?",
-      options:[{id:"a",text:"Transparency"},{id:"b",text:"Inclusiveness"},{id:"c",text:"Privacy and security"},{id:"d",text:"Fairness"}],answer:"c",
-      rationale:"Privacy and security covers protecting personal data, controlling access, and respecting consent and data-use expectations."
+      prompt:"An organisation requires a named approver before any model is deployed, keeps an audit trail of model changes, and defines who responds when the system causes harm. Which principle is this?",
+      options:[{id:"a",text:"Transparency"},{id:"b",text:"Reliability and safety"},{id:"c",text:"Inclusiveness"},{id:"d",text:"Accountability"}],answer:"d",
+      rationale:"Accountability means people and organisations remain answerable for AI systems, through governance, approvals, auditability, and incident ownership. An audit trail can also help transparency, but the purpose described here is assigning responsibility."
     },
     {
       id:"k04",domain:"concepts",type:"single",
-      prompt:"A team designs its AI app to work with screen readers, offer voice input, and support several languages so that more people can use it. Which principle is this?",
-      options:[{id:"a",text:"Accountability"},{id:"b",text:"Reliability and safety"},{id:"c",text:"Transparency"},{id:"d",text:"Inclusiveness"}],answer:"d",
-      rationale:"Inclusiveness means AI should empower everyone and engage people, including people with disabilities or different languages and backgrounds."
+      prompt:"A team recruits people who use screen readers, people with limited mobility, and non-native speakers to test an AI app early in its design, and changes the design based on their feedback. Which principle does this demonstrate?",
+      options:[{id:"a",text:"Fairness"},{id:"b",text:"Inclusiveness"},{id:"c",text:"Transparency"},{id:"d",text:"Reliability and safety"}],answer:"b",
+      rationale:"Inclusiveness means designing AI that empowers and engages everyone, including people with disabilities and people from different backgrounds, ideally by involving them in the design. Fairness is about equitable outcomes between groups rather than accessible design."
     },
     {
       id:"k05",domain:"concepts",type:"single",
-      prompt:"A website clearly tells users they are chatting with an AI system, explains what it can and cannot do, and publishes how it was evaluated. Which principle does this demonstrate?",
-      options:[{id:"a",text:"Transparency"},{id:"b",text:"Accountability"},{id:"c",text:"Fairness"},{id:"d",text:"Privacy and security"}],answer:"a",
-      rationale:"Transparency means people should understand that they are using AI, what it is for, and its limitations. Documentation such as transparency notes supports this."
+      prompt:"An autonomous delivery robot is tested at night, in fog, and on icy pavements. It is also designed to stop safely if a sensor fails. Which principle is being addressed?",
+      options:[{id:"a",text:"Reliability and safety"},{id:"b",text:"Accountability"},{id:"c",text:"Fairness"},{id:"d",text:"Privacy and security"}],answer:"a",
+      rationale:"Reliability and safety means systems perform consistently under expected and unexpected conditions and fail safely. Testing edge conditions and building in a safe stop are typical practices."
     },
     {
       id:"k06",domain:"concepts",type:"single",
-      prompt:"An organisation names an owner for each AI system, sets up a review board that can pause a system, and keeps a human able to override decisions. Which principle is being applied?",
-      options:[{id:"a",text:"Inclusiveness"},{id:"b",text:"Transparency"},{id:"c",text:"Accountability"},{id:"d",text:"Reliability and safety"}],answer:"c",
-      rationale:"Accountability means people remain responsible for AI systems, through governance, oversight, and the ability to intervene."
+      prompt:"A clinical note summariser must ensure developers cannot read raw patient notes, encrypt data at rest, and delete source data after 30 days. Which principle do these requirements address?",
+      options:[{id:"a",text:"Transparency"},{id:"b",text:"Accountability"},{id:"c",text:"Privacy and security"},{id:"d",text:"Reliability and safety"}],answer:"c",
+      rationale:"Privacy and security covers protecting personal data through access control, encryption, and retention or deletion rules. Accountability would cover who is answerable for the system, not how data is protected."
     },
     {
       id:"k07",domain:"concepts",type:"match",label:"DRAG DROP",
-      prompt:"Match each practice to the responsible AI principle it most directly supports.",
-      options:[{id:"p1",text:"Red-teaming a chatbot to find harmful or unsafe responses before release"},{id:"p2",text:"Comparing error rates across age groups and fixing large differences"},{id:"p3",text:"Publishing a note that explains the system's intended uses and limitations"},{id:"p4",text:"Adding captions and keyboard navigation to an AI tool"}],
-      choices:[{id:"rel",text:"Reliability and safety"},{id:"fair",text:"Fairness"},{id:"tra",text:"Transparency"},{id:"inc",text:"Inclusiveness"},{id:"acc",text:"Accountability"}],
-      answer:{p1:"rel",p2:"fair",p3:"tra",p4:"inc"},
-      rationale:"Red-teaming tests for unsafe behaviour (reliability and safety). Comparing outcomes across groups targets fairness. Explaining intended uses and limits is transparency. Accessibility features support inclusiveness."
+      prompt:"Match each practice to the responsible AI principle it most directly supports. Each principle may be used once or not at all.",
+      options:[{id:"p1",text:"Publishing a model card that lists training data sources and known limitations"},{id:"p2",text:"Allowing a human reviewer to override an automated claim denial"},{id:"p3",text:"Alerting the team when the model's accuracy drops in production"},{id:"p4",text:"Aggregating results so that no individual can be identified in reports"},{id:"p5",text:"Measuring whether error rates differ between demographic groups"}],
+      choices:[{id:"tra",text:"Transparency"},{id:"acc",text:"Accountability"},{id:"rel",text:"Reliability and safety"},{id:"priv",text:"Privacy and security"},{id:"fair",text:"Fairness"},{id:"inc",text:"Inclusiveness"}],
+      answer:{p1:"tra",p2:"acc",p3:"rel",p4:"priv",p5:"fair"},
+      rationale:"A model card documents how a system works and where it is limited (transparency). Human override keeps people responsible for outcomes (accountability). Production monitoring catches failures (reliability and safety). Aggregation protects individuals' data (privacy and security). Comparing error rates across groups tests for unfair outcomes (fairness)."
+    },
+    {
+      id:"k08",domain:"concepts",type:"yesno",
+      prompt:"You are reviewing statements about responsible AI.",
+      options:[{id:"s1",text:"Telling users that content was generated by AI supports transparency."},{id:"s2",text:"If a model is highly accurate on average, it is fair."},{id:"s3",text:"Accountability means the AI system itself is responsible for its decisions."}],
+      answer:{s1:"yes",s2:"no",s3:"no"},
+      rationale:"Box 1: Yes. Disclosing AI use is a core transparency practice. Box 2: No. High average accuracy can hide much worse performance for some groups, so fairness has to be measured across groups. Box 3: No. Accountability means the people and organisations that design and deploy AI remain responsible, not the system."
     },
 
-    // How generative AI works, models, and configuration
+    // How generative models work, choosing models, configuration
     {
-      id:"k08",domain:"concepts",type:"single",
-      prompt:"How does a large language model generate a response to a prompt?",
-      options:[{id:"a",text:"It looks up a stored answer that exactly matches the prompt"},{id:"b",text:"It repeatedly predicts the most likely next token, based on patterns learned from its training data and the prompt so far"},{id:"c",text:"It searches the internet for every request by default"},{id:"d",text:"It runs a fixed set of if-then rules written by developers"}],answer:"b",
-      rationale:"LLMs are transformer models that generate text one token at a time by predicting likely next tokens from the context. They do not retrieve stored answers or browse the web unless a tool or grounding is added."
-    },
-    {
-      id:"k09",domain:"concepts",type:"yesno",
-      prompt:"You are explaining how generative AI models work.",
-      options:[{id:"s1",text:"Language models process text as tokens, which can be whole words or parts of words."},{id:"s2",text:"Embeddings represent text as vectors, so text with similar meaning has similar vectors."},{id:"s3",text:"If a prompt is clear, the model's response is always factually correct."}],
-      answer:{s1:"yes",s2:"yes",s3:"no"},
-      rationale:"Box 1: Yes. Text is split into tokens before processing. Box 2: Yes. Embeddings place semantically similar text close together in vector space. Box 3: No. Models can produce plausible but incorrect content (fabrications), so grounding and evaluation are still needed."
+      id:"k09",domain:"concepts",type:"multi",
+      prompt:"A deployed model has a 128,000-token context window. Which three items count towards this limit in a single request?",
+      options:[{id:"a",text:"The system message"},{id:"b",text:"The previous conversation turns included in the request"},{id:"c",text:"The tokens the model generates in its response"},{id:"d",text:"The deployment name"},{id:"e",text:"The data the model was originally trained on"}],answer:["a","b","c"],
+      rationale:"The context window covers everything the model processes in one request: instructions, history, the user's input, any grounding data, and the generated output. Training data is not part of the request, and the deployment name only routes the call."
     },
     {
       id:"k10",domain:"concepts",type:"single",
-      prompt:"In a very long chat, the model starts ignoring details the user gave at the beginning. Which model characteristic most likely explains this?",
-      options:[{id:"a",text:"The context window, the maximum number of tokens the model can consider at once"},{id:"b",text:"The model's temperature setting"},{id:"c",text:"The deployment's region"},{id:"d",text:"The model's training date"}],answer:"a",
-      rationale:"Prompts, history, and output must fit within the context window. When a conversation exceeds it, earlier content must be dropped or summarised, so the model no longer sees it."
+      prompt:"Which part of a transformer-based language model lets it weigh how relevant each token is to the other tokens in the input when it builds its understanding of the text?",
+      options:[{id:"a",text:"The tokenizer"},{id:"b",text:"The temperature setting"},{id:"c",text:"The attention mechanism"},{id:"d",text:"The stop sequence"}],answer:"c",
+      rationale:"Self-attention computes how strongly each token relates to every other token, which lets transformers capture context. The tokenizer only splits text into tokens, and temperature affects sampling at output time."
     },
     {
       id:"k11",domain:"concepts",type:"single",
-      prompt:"A team needs a model to classify short text messages quickly and cheaply, possibly on edge devices. Accuracy tests show that a large model is not needed. Which type of model is the best fit?",
-      options:[{id:"a",text:"A small language model"},{id:"b",text:"An image-generation model"},{id:"c",text:"A large reasoning model"},{id:"d",text:"A text-to-speech model"}],answer:"a",
-      rationale:"Small language models, such as the Phi family, are efficient for focused tasks, with lower cost and latency, and some can run on devices. A reasoning model adds cost and latency that this simple task does not need."
+      prompt:"Users searching for \"vehicle cover\" should find documents about \"car insurance\", even though the words differ. Which approach makes this possible?",
+      options:[{id:"a",text:"Exact keyword matching on an inverted index"},{id:"b",text:"Comparing embedding vectors for similarity"},{id:"c",text:"Counting how many tokens each document contains"},{id:"d",text:"Running OCR on the documents"}],answer:"b",
+      rationale:"Embeddings place semantically similar text close together in vector space, so similarity search (for example cosine similarity) finds matches by meaning. Keyword matching needs the same words, and token counts carry no meaning."
     },
     {
-      id:"k12",domain:"concepts",type:"match",label:"DRAG DROP",
-      prompt:"Match each requirement to the most appropriate type of model.",
-      options:[{id:"m1",text:"Answer questions about the contents of a photo"},{id:"m2",text:"Create a new illustration from a text description"},{id:"m3",text:"Convert documents into vectors for semantic search"},{id:"m4",text:"Work through a complex multi-step planning problem"}],
-      choices:[{id:"mm",text:"Multimodal model"},{id:"img",text:"Image-generation model"},{id:"emb",text:"Embedding model"},{id:"rsn",text:"Reasoning model"},{id:"stt",text:"Speech-to-text model"}],
-      answer:{m1:"mm",m2:"img",m3:"emb",m4:"rsn"},
-      rationale:"Multimodal models accept images and text. Image-generation models create pictures. Embedding models produce vectors for search and similarity. Reasoning models spend extra computation on step-by-step problem solving."
+      id:"k12",domain:"concepts",type:"single",
+      prompt:"A model confidently gives an incorrect answer about your company's leave policy. The policy is internal and was never in the model's training data. What is the most effective fix?",
+      options:[{id:"a",text:"Lower the temperature"},{id:"b",text:"Deploy a model with more parameters"},{id:"c",text:"Increase the maximum output tokens"},{id:"d",text:"Retrieve the relevant policy text and include it in the prompt, instructing the model to answer from it"}],answer:"d",
+      rationale:"The model cannot know information it never saw, so grounding (retrieval-augmented generation) supplies the facts at request time. Lowering temperature is the tempting distractor, but it only makes output less random; it cannot add missing knowledge."
     },
     {
       id:"k13",domain:"concepts",type:"single",
-      prompt:"A marketing team uses a deployed model to brainstorm slogans and wants more varied, creative suggestions. Which parameter should they increase?",
-      options:[{id:"a",text:"Maximum output tokens"},{id:"b",text:"Temperature"},{id:"c",text:"The number of stop sequences"},{id:"d",text:"The deployment's rate limit"}],answer:"b",
-      rationale:"Higher temperature increases randomness in token selection, producing more varied output. Lower temperature is better for consistent, factual tasks."
+      prompt:"You need the cheapest model in the Foundry catalog that accepts image input and scores well on a reasoning benchmark. What is the most efficient way to shortlist candidates?",
+      options:[{id:"a",text:"Deploy every model and test each one manually"},{id:"b",text:"Use the model catalog's capability filters, then compare candidates with the model leaderboards and benchmarks"},{id:"c",text:"Choose the model with the newest release date"},{id:"d",text:"Choose the model with the largest context window"}],answer:"b",
+      rationale:"The catalog can filter by capabilities such as image input, and the leaderboards compare quality, cost, and throughput, so you can shortlist before deploying. Testing on your own data then confirms the choice."
     },
     {
-      id:"k14",domain:"concepts",type:"yesno",
-      prompt:"You are choosing model deployment options in Microsoft Foundry.",
-      options:[{id:"s1",text:"A Standard (pay-as-you-go) deployment is billed based on the tokens processed."},{id:"s2",text:"A Provisioned deployment reserves processing capacity for predictable throughput."},{id:"s3",text:"The maximum output tokens setting controls how creative a response is."}],
+      id:"k14",domain:"concepts",type:"match",label:"DRAG DROP",
+      prompt:"Match each requirement to the most appropriate type of model. Each type may be used once or not at all.",
+      options:[{id:"m1",text:"Produce a vector for each support ticket so similar tickets can be clustered"},{id:"m2",text:"Transcribe a recorded podcast"},{id:"m3",text:"Solve multistep logic problems where accuracy matters more than latency"},{id:"m4",text:"Summarise short notes offline on a laptop"},{id:"m5",text:"Explain a diagram shown in a scanned page"}],
+      choices:[{id:"emb",text:"Embedding model"},{id:"stt",text:"Speech-to-text model"},{id:"rsn",text:"Reasoning model"},{id:"slm",text:"Small language model"},{id:"mm",text:"Multimodal model"},{id:"img",text:"Image-generation model"}],
+      answer:{m1:"emb",m2:"stt",m3:"rsn",m4:"slm",m5:"mm"},
+      rationale:"Embedding models output vectors for clustering and search. Speech-to-text models transcribe audio. Reasoning models spend extra computation on hard problems. Small language models suit local, low-resource tasks. Multimodal models interpret images such as diagrams. Image-generation models create images rather than interpreting them."
+    },
+    {
+      id:"k15",domain:"concepts",type:"single",
+      prompt:"In long answers, a model keeps repeating the same phrases. Which parameter change most directly reduces this?",
+      options:[{id:"a",text:"Decrease temperature"},{id:"b",text:"Increase the frequency penalty"},{id:"c",text:"Increase the maximum output tokens"},{id:"d",text:"Add a stop sequence"}],answer:"b",
+      rationale:"A frequency penalty lowers the probability of tokens in proportion to how often they have already appeared, which reduces repetition. Decreasing temperature tends to make output more deterministic and can increase repetition."
+    },
+    {
+      id:"k16",domain:"concepts",type:"single",
+      prompt:"An app asks a model for a list of items. Generation must end as soon as the model writes the marker ###. What should be configured?",
+      options:[{id:"a",text:"A stop sequence"},{id:"b",text:"A lower maximum output token limit"},{id:"c",text:"A presence penalty"},{id:"d",text:"Top P set to 0"}],answer:"a",
+      rationale:"A stop sequence tells the model to stop generating when that text appears. A token limit stops at a fixed length regardless of content."
+    },
+    {
+      id:"k17",domain:"concepts",type:"yesno",
+      prompt:"You are comparing Foundry model deployment types.",
+      options:[{id:"s1",text:"A Global Standard deployment can process requests in any Azure region."},{id:"s2",text:"A Data Zone deployment keeps processing within a geographic zone, such as the EU or the US."},{id:"s3",text:"A Provisioned deployment is billed only for the tokens that are actually processed."}],
       answer:{s1:"yes",s2:"yes",s3:"no"},
-      rationale:"Box 1: Yes. Standard deployments, including Global and Data Zone Standard, charge per token. Box 2: Yes. Provisioned deployments reserve throughput units. Box 3: No. Maximum output tokens limits response length; temperature and top_p affect creativity."
+      rationale:"Box 1: Yes. Global deployments route traffic to available capacity worldwide. Box 2: Yes. Data Zone deployments restrict processing to the chosen zone. Box 3: No. Provisioned deployments reserve throughput units and are billed for the reserved capacity, whether or not it is used."
+    },
+    {
+      id:"k18",domain:"concepts",type:"single",
+      prompt:"A developer sets Top P to 0.1 for a deployment. What effect does this have?",
+      options:[{id:"a",text:"The response is limited to 10% of the maximum output tokens"},{id:"b",text:"The model samples only from the smallest set of most likely tokens whose combined probability reaches 10%, making output more focused"},{id:"c",text:"The model repeats 10% fewer words"},{id:"d",text:"Only 10% of requests are processed"}],answer:"b",
+      rationale:"Top P (nucleus sampling) limits choices to the most probable tokens whose cumulative probability reaches P. A low value narrows the choices, similar in effect to a low temperature. It is generally recommended to adjust either temperature or Top P, not both."
     },
 
     // AI workloads
     {
-      id:"k15",domain:"concepts",type:"single",
-      prompt:"A help desk wants to automatically prioritise emails written by frustrated or angry customers. Which AI workload is this?",
-      options:[{id:"a",text:"Computer vision"},{id:"b",text:"Speech synthesis"},{id:"c",text:"Text analysis (sentiment analysis)"},{id:"d",text:"Image generation"}],answer:"c",
-      rationale:"Sentiment analysis is a text analysis technique that scores whether text is positive, negative, neutral, or mixed, which can drive routing rules."
-    },
-    {
-      id:"k16",domain:"concepts",type:"match",label:"DRAG DROP",
-      prompt:"Match each scenario to the AI workload it represents.",
-      options:[{id:"w1",text:"Pull totals and dates from scanned supplier invoices"},{id:"w2",text:"Write first drafts of product descriptions"},{id:"w3",text:"Display live captions while a presenter speaks"},{id:"w4",text:"Spot damaged items in images from a conveyor belt camera"},{id:"w5",text:"An assistant that checks calendars and books meeting rooms by using tools"}],
-      choices:[{id:"ie",text:"Information extraction"},{id:"gen",text:"Generative AI"},{id:"sp",text:"Speech recognition"},{id:"cv",text:"Computer vision"},{id:"ag",text:"Agentic AI"},{id:"ta",text:"Text analysis"}],
-      answer:{w1:"ie",w2:"gen",w3:"sp",w4:"cv",w5:"ag"},
-      rationale:"Extracting fields from forms is information extraction. Drafting new text is generative AI. Live captions use speech recognition. Detecting damage in images is computer vision. Taking actions with tools towards a goal is agentic AI."
-    },
-    {
-      id:"k17",domain:"concepts",type:"single",
-      prompt:"What most clearly distinguishes an AI agent from a basic chat completion?",
-      options:[{id:"a",text:"An agent always uses a larger model"},{id:"b",text:"An agent can follow instructions to reach a goal, use tools such as search or APIs, and take multistep actions"},{id:"c",text:"An agent never needs a model deployment"},{id:"d",text:"An agent can only answer yes or no questions"}],answer:"b",
-      rationale:"Agents combine a model with instructions, tools, and memory or state so they can plan and act across several steps. A basic completion returns one generated response to a prompt."
-    },
-    {
-      id:"k18",domain:"concepts",type:"single",
-      prompt:"A product team wants to see the main talking points across thousands of reviews, such as \"battery life\" and \"screen glare\". Which text analysis technique should be used?",
-      options:[{id:"a",text:"Language detection"},{id:"b",text:"Key phrase extraction"},{id:"c",text:"Speech synthesis"},{id:"d",text:"Optical character recognition"}],answer:"b",
-      rationale:"Key phrase (keyword) extraction identifies the main concepts in text. Language detection identifies only which language the text is in."
-    },
-    {
       id:"k19",domain:"concepts",type:"single",
-      prompt:"A news archive needs every mention of people, organisations, locations, and dates identified and labelled. Which technique fits?",
-      options:[{id:"a",text:"Named entity recognition"},{id:"b",text:"Sentiment analysis"},{id:"c",text:"Summarisation"},{id:"d",text:"Text to speech"}],answer:"a",
-      rationale:"Named entity recognition (entity detection) finds and categorises entities such as people, organisations, places, and dates."
+      prompt:"For each product review, a retailer needs to know which features are mentioned, such as \"battery\" or \"screen\", and whether the customer's opinion of each feature is positive or negative. Which capability fits best?",
+      options:[{id:"a",text:"Key phrase extraction"},{id:"b",text:"Document-level sentiment analysis"},{id:"c",text:"Sentiment analysis with opinion mining (aspect-based sentiment)"},{id:"d",text:"Named entity recognition"}],answer:"c",
+      rationale:"Opinion mining links sentiment to specific targets (aspects) in the text. Key phrase extraction finds the features but not the opinion about each, and document-level sentiment gives only one overall score."
     },
     {
-      id:"k20",domain:"concepts",type:"multi",
-      prompt:"A news app must show a short version of each article and label the language each article is written in. Which two text analysis capabilities are required?",
-      options:[{id:"a",text:"Summarisation"},{id:"b",text:"Language detection"},{id:"c",text:"Object detection"},{id:"d",text:"Speech synthesis"},{id:"e",text:"Image generation"}],answer:["a","b"],
-      rationale:"Summarisation condenses the article, and language detection identifies its language. The other options are vision, speech, or image workloads."
+      id:"k20",domain:"concepts",type:"single",
+      prompt:"Before emails are archived, a compliance team must find and mask credit card numbers, passport numbers, and phone numbers. Which text analysis capability is designed for this?",
+      options:[{id:"a",text:"Named entity recognition"},{id:"b",text:"Key phrase extraction"},{id:"c",text:"Entity linking"},{id:"d",text:"PII detection"}],answer:"d",
+      rationale:"PII detection identifies personal and sensitive information categories, such as card numbers and passport numbers, and can return redacted text. General named entity recognition finds people, places, and organisations, but it is not the feature designed for sensitive data categories and redaction."
     },
     {
       id:"k21",domain:"concepts",type:"single",
-      prompt:"Warehouse staff want to control an app with spoken commands such as \"show today's orders\". Which capability converts their speech into text that the app can act on?",
-      options:[{id:"a",text:"Speech synthesis"},{id:"b",text:"Speech recognition (speech to text)"},{id:"c",text:"Key phrase extraction"},{id:"d",text:"Image classification"}],answer:"b",
-      rationale:"Speech recognition transcribes spoken audio into text. Speech synthesis does the opposite, turning text into audio."
+      prompt:"A research tool must work out whether \"Mercury\" in a document means the planet, the chemical element, or the record label, and link to the matching knowledge-base article. Which capability is required?",
+      options:[{id:"a",text:"Entity linking"},{id:"b",text:"Named entity recognition"},{id:"c",text:"Language detection"},{id:"d",text:"Key phrase extraction"}],answer:"a",
+      rationale:"Entity linking resolves which real-world entity a mention refers to and links it to a knowledge base. Named entity recognition can label \"Mercury\" as an entity, but it does not resolve the ambiguity or link it."
     },
     {
-      id:"k22",domain:"concepts",type:"yesno",
-      prompt:"You are describing speech capabilities.",
-      options:[{id:"s1",text:"Speech synthesis converts text into spoken audio."},{id:"s2",text:"Speech Synthesis Markup Language (SSML) can control pronunciation, speaking rate, and voice."},{id:"s3",text:"Speech recognition only works after each speaker trains the model with their own voice."}],
-      answer:{s1:"yes",s2:"yes",s3:"no"},
-      rationale:"Box 1: Yes. Text to speech produces audio, often with neural voices. Box 2: Yes. SSML fine-tunes how text is spoken. Box 3: No. Prebuilt speech recognition works for many speakers without enrolment; custom models are optional, for example for domain vocabulary."
+      id:"k22",domain:"concepts",type:"multi",
+      prompt:"From call transcripts, a contact centre wants to know what customers talk about, how they feel, and which products and places they mention. Which three capabilities should be used?",
+      options:[{id:"a",text:"Key phrase extraction"},{id:"b",text:"Sentiment analysis"},{id:"c",text:"Named entity recognition"},{id:"d",text:"Language detection"},{id:"e",text:"Text to speech"}],answer:["a","b","c"],
+      rationale:"Key phrases capture topics, sentiment captures how customers feel, and NER identifies products and locations. Language detection is useful only if the language is unknown, which the scenario does not mention, and text to speech produces audio."
     },
     {
       id:"k23",domain:"concepts",type:"single",
-      prompt:"A shelf-monitoring system must find every product on a shelf photo and return where each one is located. Which computer vision capability is required?",
-      options:[{id:"a",text:"Image classification"},{id:"b",text:"Object detection"},{id:"c",text:"Image generation"},{id:"d",text:"Speech recognition"}],answer:"b",
-      rationale:"Object detection identifies multiple objects and their locations (bounding boxes). Image classification assigns a label to the whole image without locating items."
+      prompt:"For legal reasons, a summary of each contract must contain only sentences copied verbatim from the original. Which approach meets this requirement?",
+      options:[{id:"a",text:"Abstractive summarisation"},{id:"b",text:"Extractive summarisation"},{id:"c",text:"Key phrase extraction"},{id:"d",text:"A generative model prompted to summarise in its own words"}],answer:"b",
+      rationale:"Extractive summarisation selects the most important existing sentences. Abstractive summarisation and free-form generation write new sentences, which breaks the verbatim requirement."
     },
     {
       id:"k24",domain:"concepts",type:"single",
-      prompt:"A tourism app reads the words on photographed street signs and menus. Which capability is used?",
-      options:[{id:"a",text:"Optical character recognition (OCR)"},{id:"b",text:"Sentiment analysis"},{id:"c",text:"Image generation"},{id:"d",text:"Speech synthesis"}],answer:"a",
-      rationale:"OCR extracts printed or handwritten text from images. The text can then be translated or analysed."
+      prompt:"A meeting transcript must label which parts were spoken by Speaker 1, Speaker 2, and so on. The speakers do not need to be identified by name. Which speech feature provides this?",
+      options:[{id:"a",text:"Speaker recognition (verification)"},{id:"b",text:"Language identification"},{id:"c",text:"Speaker diarisation"},{id:"d",text:"Speech synthesis"}],answer:"c",
+      rationale:"Diarisation separates a transcript by speaker turns without needing to know who the speakers are. Speaker recognition verifies or identifies a known person from their voice profile, which is a different and more sensitive capability."
     },
     {
       id:"k25",domain:"concepts",type:"single",
-      prompt:"A designer types \"a watercolour lighthouse at sunrise\" and wants a brand-new picture. Which model capability is needed?",
-      options:[{id:"a",text:"Image analysis"},{id:"b",text:"OCR"},{id:"c",text:"Image generation"},{id:"d",text:"Object detection"}],answer:"c",
-      rationale:"Image-generation models create new images from text prompts, and some also accept reference images. Image analysis, OCR, and detection interpret existing images rather than creating new ones."
+      prompt:"A university needs English text from recorded French lectures. Which approach is correct?",
+      options:[{id:"a",text:"Send the audio file directly to Azure Translator text translation"},{id:"b",text:"Use speech translation, with French as the source language and English as the target"},{id:"c",text:"Use English speech-to-text on the French audio"},{id:"d",text:"Use text to speech with an English voice"}],answer:"b",
+      rationale:"Speech translation recognises French speech and returns English text, or alternatively you can transcribe and then translate. Text translation works on text, not audio, and recognising French audio with an English speech-to-text setting gives poor results."
     },
     {
-      id:"k26",domain:"concepts",type:"multi",
-      prompt:"A company wants its recorded training videos to be searchable by what is said and what is shown. Which two extraction techniques should be applied?",
-      options:[{id:"a",text:"Transcribe the audio track to text"},{id:"b",text:"Analyse key frames or scenes to describe what appears on screen"},{id:"c",text:"Convert the video title to speech"},{id:"d",text:"Generate new images from the video title"},{id:"e",text:"Run sentiment analysis on the file name"}],answer:["a","b"],
-      rationale:"Transcription captures spoken content, and frame or scene analysis describes visual content with timestamps. Together they make video searchable. The other options add no information from the video itself."
+      id:"k26",domain:"concepts",type:"yesno",
+      prompt:"You are describing speech capabilities.",
+      options:[{id:"s1",text:"Speech recognition can transcribe audio in real time or in batches from stored files."},{id:"s2",text:"A custom speech model is mainly used to make synthesised audio sound like a specific person."},{id:"s3",text:"SSML can add pauses and change the pitch of synthesised speech."}],
+      answer:{s1:"yes",s2:"no",s3:"yes"},
+      rationale:"Box 1: Yes. Real-time and batch transcription are both supported. Box 2: No. Custom speech improves recognition accuracy, for example for domain vocabulary or accents; custom voice is the synthesis feature. Box 3: Yes. SSML controls prosody, including pauses, pitch, and rate."
+    },
+    {
+      id:"k27",domain:"concepts",type:"single",
+      prompt:"A radiology tool must mark the exact pixel outline of each abnormal region in a scan, not just a rectangle around it. Which computer vision task is required?",
+      options:[{id:"a",text:"Image classification"},{id:"b",text:"Object detection"},{id:"c",text:"Optical character recognition"},{id:"d",text:"Image segmentation"}],answer:"d",
+      rationale:"Segmentation labels pixels, producing precise outlines. Object detection returns bounding boxes, which is the close distractor, and classification labels the whole image."
+    },
+    {
+      id:"k28",domain:"concepts",type:"single",
+      prompt:"An animal shelter wants each uploaded photo labelled as cat, dog, or rabbit. Each photo shows one animal, and the location of the animal in the photo is not needed. Which task fits best?",
+      options:[{id:"a",text:"Image classification"},{id:"b",text:"Object detection"},{id:"c",text:"Image segmentation"},{id:"d",text:"Image generation"}],answer:"a",
+      rationale:"Classification assigns one label to the whole image, which is all that is needed. Detection and segmentation also locate objects, which adds complexity the requirement does not ask for."
+    },
+    {
+      id:"k29",domain:"concepts",type:"single",
+      prompt:"A stadium wants to count how many people appear in crowd photos. Nobody may be identified. Which capability is appropriate?",
+      options:[{id:"a",text:"Facial recognition to match each face against a database"},{id:"b",text:"Speaker recognition"},{id:"c",text:"Person detection, counting the detected people"},{id:"d",text:"OCR"}],answer:"c",
+      rationale:"Detecting and counting people answers the question without identifying anyone. Facial recognition identifies individuals, raises privacy concerns, and is a restricted (Limited Access) capability in Azure."
+    },
+    {
+      id:"k30",domain:"concepts",type:"single",
+      prompt:"An online shop needs a short natural-language sentence describing each product photo so that customers can search by description. Which capability is the best fit?",
+      options:[{id:"a",text:"OCR"},{id:"b",text:"Image captioning or description by a multimodal model"},{id:"c",text:"Image generation"},{id:"d",text:"Image classification into three fixed categories"}],answer:"b",
+      rationale:"Captioning produces a sentence that describes the image content. OCR reads only text in the image, and fixed-category classification would not describe each photo."
+    },
+    {
+      id:"k31",domain:"concepts",type:"single",
+      prompt:"A designer wants several variations of the company's existing logo that keep its overall shape. Which approach is most suitable?",
+      options:[{id:"a",text:"Text-to-image generation from a description only"},{id:"b",text:"OCR on the logo"},{id:"c",text:"Object detection on the logo"},{id:"d",text:"An image-generation model that accepts the existing logo as an input image for editing"}],answer:"d",
+      rationale:"Image editing or image-to-image generation uses the supplied image as a reference, so the output keeps its structure. A text-only prompt cannot reliably reproduce the existing shape."
+    },
+    {
+      id:"k32",domain:"concepts",type:"match",label:"DRAG DROP",
+      prompt:"Match each requirement to the information-extraction technique that addresses it. Each technique may be used once or not at all.",
+      options:[{id:"x1",text:"Read printed text from a scanned receipt"},{id:"x2",text:"Recognise the rows and columns of a table in a PDF"},{id:"x3",text:"Return \"Total\" and \"Merchant\" as named values"},{id:"x4",text:"Find the moment a product appears in a video"},{id:"x5",text:"Make a podcast's spoken content searchable"}],
+      choices:[{id:"ocr",text:"OCR"},{id:"lay",text:"Layout analysis"},{id:"fld",text:"Field extraction"},{id:"vid",text:"Video analysis with time-stamped segments"},{id:"tr",text:"Speech transcription"},{id:"sent",text:"Sentiment analysis"}],
+      answer:{x1:"ocr",x2:"lay",x3:"fld",x4:"vid",x5:"tr"},
+      rationale:"OCR reads text, layout analysis recovers structure such as tables, and field extraction maps content to named values. Video analysis locates events in time, and transcription turns speech into searchable text."
+    },
+    {
+      id:"k33",domain:"concepts",type:"single",
+      prompt:"A shopping agent should remember a customer's preferred size and brand across separate visits on different days. Which agent component provides this?",
+      options:[{id:"a",text:"The model's context window"},{id:"b",text:"The conversation for the current session"},{id:"c",text:"Long-term memory stored outside individual conversations"},{id:"d",text:"The agent's system instructions"}],answer:"c",
+      rationale:"A conversation keeps context only within one session, and the context window is a per-request limit. Remembering facts across sessions needs a memory store that persists independently. Putting customer data in the shared instructions would apply it to every user."
+    },
+    {
+      id:"k34",domain:"concepts",type:"single",
+      prompt:"Which scenario is best described as agentic AI?",
+      options:[{id:"a",text:"Summarising a document that a user pastes in"},{id:"b",text:"Generating an image from a prompt"},{id:"c",text:"Translating a paragraph into Spanish"},{id:"d",text:"Monitoring a shared inbox, looking up each order in the ERP system, issuing refunds under £50, and emailing the customer"}],answer:"d",
+      rationale:"Agentic AI pursues a goal across several steps, deciding which tools to use and taking actions. The other options are single generative tasks with no tools or actions."
     },
 
-    /* ===== Implement AI solutions by using Microsoft Foundry: 34 / 60 = 56.7% ===== */
+    /* ===== Implement AI solutions by using Microsoft Foundry: 46 / 80 = 57.5% ===== */
 
-    // Generative AI apps and agents
+    // Prompts, portal, and deployments
     {
       id:"f01",domain:"foundry",type:"single",caseStudy:"travel",
-      prompt:"Where should Contoso put the rules \"Only answer travel questions\" and \"Reply in British English\" so that they apply to every conversation?",
-      options:[{id:"a",text:"In each user message, typed by the customer"},{id:"b",text:"In the system prompt (instructions)"},{id:"c",text:"In the deployment name"},{id:"d",text:"In the maximum output tokens setting"}],answer:"b",
-      rationale:"The system prompt sets the assistant's role, tone, and constraints for the whole conversation. User prompts contain each individual request."
+      prompt:"Contoso's system message says \"Focus on travel.\" During testing, the assistant still answers questions about cooking. Which change is most likely to fix this?",
+      options:[{id:"a",text:"Move \"Focus on travel\" into each user message"},{id:"b",text:"Rewrite the system message to state the allowed scope explicitly, say what to do with out-of-scope requests, and include an example polite refusal"},{id:"c",text:"Increase the temperature"},{id:"d",text:"Increase the maximum output tokens"}],answer:"b",
+      rationale:"Vague instructions are weakly followed. Explicit scope, an explicit fallback behaviour, and an example make the requirement clear. Users would not reliably add the rule themselves, and temperature or length settings do not affect scope."
     },
     {
       id:"f02",domain:"foundry",type:"multi",
-      prompt:"Responses from a deployed model are inconsistent in structure. Which two prompt changes are most likely to improve them?",
-      options:[{id:"a",text:"Give clear, specific instructions, including the required output format"},{id:"b",text:"Include one or two examples of the desired output (few-shot prompting)"},{id:"c",text:"Make the prompt shorter and vaguer so the model has more freedom"},{id:"d",text:"Set temperature to the maximum value"},{id:"e",text:"Remove the system prompt"}],answer:["a","b"],
-      rationale:"Specific instructions and examples are core prompt-engineering techniques that guide format and content. Vague prompts and maximum randomness make results less consistent."
+      prompt:"An app parses a model's response as JSON, but the format varies between runs. Which two changes are most likely to make the output reliably parseable?",
+      options:[{id:"a",text:"Request structured output by supplying a JSON schema"},{id:"b",text:"Include an example of the exact JSON expected"},{id:"c",text:"Increase the temperature"},{id:"d",text:"Remove the system message"},{id:"e",text:"Increase the presence penalty"}],answer:["a","b"],
+      rationale:"A schema (structured outputs) constrains the shape, and an example shows it concretely. Higher temperature and presence penalty increase variation, which is the opposite of what is needed."
     },
     {
-      id:"f03",domain:"foundry",type:"yesno",
-      prompt:"You are writing prompts for a generative AI app.",
-      options:[{id:"s1",text:"Providing examples of the desired output in a prompt can improve consistency."},{id:"s2",text:"The system message is normally displayed to the end user in the chat window."},{id:"s3",text:"Adding relevant source data to a prompt (grounding) can reduce fabricated answers."}],
+      id:"f03",domain:"foundry",type:"match",label:"DRAG DROP",
+      prompt:"Match each prompt change to the prompt-engineering technique it uses. Each technique may be used once or not at all.",
+      options:[{id:"t1",text:"Add three input-and-answer examples before the real question"},{id:"t2",text:"Start the system message with \"You are a UK tax adviser who writes for beginners\""},{id:"t3",text:"Add the retrieved policy text and say \"Answer only from the text above\""},{id:"t4",text:"Ask the model to work through the problem step by step before giving its final answer"},{id:"t5",text:"Split a complex task into a sequence of smaller prompts, passing each output to the next"}],
+      choices:[{id:"few",text:"Few-shot prompting"},{id:"role",text:"Assigning a role or persona"},{id:"gr",text:"Grounding"},{id:"cot",text:"Chain-of-thought prompting"},{id:"chain",text:"Prompt chaining"},{id:"zero",text:"Zero-shot prompting"}],
+      answer:{t1:"few",t2:"role",t3:"gr",t4:"cot",t5:"chain"},
+      rationale:"Examples are few-shot prompting, and a persona sets role and tone. Supplying source text is grounding. Step-by-step reasoning is chain-of-thought. Breaking a task into linked prompts is prompt chaining. Zero-shot means no examples are given."
+    },
+    {
+      id:"f04",domain:"foundry",type:"yesno",
+      prompt:"You are reviewing prompt-design statements.",
+      options:[{id:"s1",text:"Models generally prioritise system-message instructions, but the system message is not a security boundary."},{id:"s2",text:"Adding \"Do not make anything up\" to a prompt guarantees that the model will not fabricate information."},{id:"s3",text:"Clearly separating instructions from supplied content, for example with delimiters, helps the model tell them apart."}],
       answer:{s1:"yes",s2:"no",s3:"yes"},
-      rationale:"Box 1: Yes. Few-shot examples show the model what good output looks like. Box 2: No. The system message is sent to the model but is not normally shown to users. Box 3: Yes. Grounding gives the model facts to base its answer on."
+      rationale:"Box 1: Yes. System messages steer behaviour, but determined users can sometimes override them, so they must be combined with other safeguards. Box 2: No. Instructions reduce but cannot eliminate fabrication; grounding and evaluation are still needed. Box 3: Yes. Delimiters reduce confusion between instructions and data."
     },
     {
-      id:"f04",domain:"foundry",type:"single",
-      prompt:"A student opens a new Foundry project and wants to chat with a model in the playground. What must they do first?",
-      options:[{id:"a",text:"Deploy a model from the model catalog to the project"},{id:"b",text:"Create an Azure AI Search index"},{id:"c",text:"Write a Python client app"},{id:"d",text:"Train a custom model on their own data"}],answer:"a",
-      rationale:"The playground calls a model deployment. Choosing a model from the catalog and deploying it, with a deployment name and type, makes it available in the project."
+      id:"f05",domain:"foundry",type:"single",
+      prompt:"After a team deploys a model, the chat playground starts returning HTTP 429 (Too Many Requests) errors when several testers use it at once. What should be adjusted?",
+      options:[{id:"a",text:"The deployment's tokens-per-minute (TPM) rate limit, within the available quota"},{id:"b",text:"The temperature"},{id:"c",text:"The system message length"},{id:"d",text:"The Top P value"}],answer:"a",
+      rationale:"A 429 error means the deployment's rate limit has been exceeded. Raising the TPM allocation, if quota allows, or using a deployment type with more capacity addresses it. Sampling parameters do not change throughput limits."
     },
     {
-      id:"f05",domain:"foundry",type:"order",
-      prompt:"Arrange the steps to deploy and test a model in the Foundry portal.",
-      options:[{id:"proj",text:"Create or open a Foundry project"},{id:"cat",text:"Choose a model from the model catalog"},{id:"dep",text:"Deploy the model, choosing a deployment name and type"},{id:"play",text:"Open the chat playground, add a system prompt, and test"}],answer:["proj","cat","dep","play"],
-      rationale:"Work happens in a project. You pick a model, create a deployment for it, and then experiment with prompts and parameters in the playground."
+      id:"f06",domain:"foundry",type:"order",
+      prompt:"Arrange the steps to take a model from the Foundry catalog into a simple app.",
+      options:[{id:"cmp",text:"Compare candidate models in the catalog and select one"},{id:"dep",text:"Deploy the model with a deployment name and type"},{id:"play",text:"Test prompts and parameters in the chat playground"},{id:"code",text:"Copy the endpoint and sample code, and call the deployment from the app"}],answer:["cmp","dep","play","code"],
+      rationale:"Choose the model, create a deployment, iterate on prompts and settings in the playground, and then use the deployment's endpoint and name from code."
     },
     {
-      id:"f06",domain:"foundry",type:"single",
-      prompt:"In the playground, long answers stop mid-sentence. Which setting should be increased?",
-      options:[{id:"a",text:"Temperature"},{id:"b",text:"Top P"},{id:"c",text:"Maximum output tokens"},{id:"d",text:"Frequency penalty"}],answer:"c",
-      rationale:"Generation stops when the maximum output token limit is reached. Raising it allows longer responses; temperature and top P affect randomness, not length."
-    },
-    {
-      id:"f07",domain:"foundry",type:"single",caseStudy:"travel",
-      prompt:"Contoso's Python client uses the Foundry SDK (azure-ai-projects) without storing an API key. What does it pass when creating the AIProjectClient?",
-      options:[{id:"a",text:"The project endpoint and DefaultAzureCredential()"},{id:"b",text:"The model name and an API key"},{id:"c",text:"The subscription ID and a password"},{id:"d",text:"The deployment's region and a storage key"}],answer:"a",
-      rationale:"AIProjectClient(endpoint=..., credential=DefaultAzureCredential()) authenticates with Microsoft Entra ID, using az login during development. project.get_openai_client() then returns a client for chatting with the model."
+      id:"f07",domain:"foundry",type:"single",
+      prompt:"In the playground, a developer tuned a system message and set temperature to 0.2. The app now calls the same deployment, but responses behave differently. What is the most likely reason?",
+      options:[{id:"a",text:"Playground settings are saved into the deployment, so the app must be using a different region"},{id:"b",text:"The deployment needs to be redeployed after playground testing"},{id:"c",text:"The app must send the same system message and parameter values in its own requests; playground settings are not stored in the deployment"},{id:"d",text:"Apps cannot set temperature"}],answer:"c",
+      rationale:"The playground is a client. Its system message and parameters are sent with each request, but they are not saved on the deployment. The app must send the same values to get the same behaviour."
     },
     {
       id:"f08",domain:"foundry",type:"single",
-      prompt:"A developer deployed gpt-5-mini in their project with the deployment name \"chat-prod\". In openai.responses.create(model=..., input=...), what value should model use?",
-      options:[{id:"a",text:"The deployment name, \"chat-prod\""},{id:"b",text:"The project name"},{id:"c",text:"The resource group name"},{id:"d",text:"The Azure region"}],answer:"a",
-      rationale:"Calls are routed to a deployment, so the model parameter takes the deployment name. In many quickstarts the deployment name happens to match the model name."
+      prompt:"A student's app is used only occasionally for testing. They want to pay only for what they use, with no reserved capacity. Which deployment type should they choose?",
+      options:[{id:"a",text:"Provisioned"},{id:"b",text:"Global Standard"},{id:"c",text:"Data Zone Provisioned"},{id:"d",text:"Global Provisioned"}],answer:"b",
+      rationale:"Standard deployment types are pay-per-token with no reserved capacity, which suits light or variable use. Provisioned types reserve throughput and are billed for that capacity even when idle."
     },
     {
-      id:"f09",domain:"foundry",type:"yesno",
-      prompt:"You are building a chat client with the Foundry SDK for Python.",
-      options:[{id:"s1",text:"DefaultAzureCredential can use your Azure CLI sign-in (az login) during local development."},{id:"s2",text:"A project endpoint has the format https://<resource>.services.ai.azure.com/api/projects/<project>."},{id:"s3",text:"The Foundry SDK requires you to hard-code an API key in your source code."}],
-      answer:{s1:"yes",s2:"yes",s3:"no"},
-      rationale:"Box 1: Yes. DefaultAzureCredential tries developer sign-ins such as the Azure CLI. Box 2: Yes. That is the project endpoint format shown in the project overview. Box 3: No. Keyless Entra ID authentication is recommended, and keys should never be hard-coded."
+      id:"f09",domain:"foundry",type:"single",caseStudy:"travel",
+      prompt:"Contoso's code calls responses.create(model=\"gpt-4.1\", ...) and fails with a \"deployment not found\" error, even though gpt-4.1 is deployed in the project. What is the fix?",
+      options:[{id:"a",text:"Set model=\"travel-chat\""},{id:"b",text:"Redeploy gpt-4.1 in another region"},{id:"c",text:"Set model to the project name"},{id:"d",text:"Add an API key to the request"}],answer:"a",
+      rationale:"Requests are routed by deployment name. Contoso deployed the model as travel-chat, so that name must be used, not the underlying model name."
     },
+
+    // Foundry SDK chat client
     {
-      id:"f10",domain:"foundry",type:"single",caseStudy:"travel",
-      prompt:"Contoso's client answers the first question correctly, but on the next turn it has forgotten the customer's destination. What should the client do?",
-      options:[{id:"a",text:"Increase temperature"},{id:"b",text:"Send the earlier messages with each request, or keep the turns in a conversation and reference it in each request"},{id:"c",text:"Create a new deployment for every question"},{id:"d",text:"Shorten the system prompt"}],answer:"b",
-      rationale:"Models are stateless between calls. Multi-turn context comes from resending the message history or from a conversation that the service stores and that each request references."
+      id:"f10",domain:"foundry",type:"match",label:"HOTSPOT",
+      prompt:"Complete the Python code so that it sends a prompt to the travel-chat deployment by using the Foundry SDK and prints the generated text. Select the correct option for each box.",
+      code:`from azure.identity import DefaultAzureCredential
+from azure.ai.projects import AIProjectClient
+
+project = AIProjectClient(
+    endpoint=PROJECT_ENDPOINT,
+    credential=[ Box 1 ],
+)
+client = project.[ Box 2 ]
+response = client.responses.create(
+    model=[ Box 3 ],
+    input="Suggest three day trips from Lisbon.",
+)
+print(response.[ Box 4 ])`,
+      options:[{id:"b1",text:"Box 1"},{id:"b2",text:"Box 2"},{id:"b3",text:"Box 3"},{id:"b4",text:"Box 4"}],
+      choices:[{id:"dac",text:"DefaultAzureCredential()"},{id:"akc",text:"AzureKeyCredential(API_KEY)"},{id:"goc",text:"get_openai_client()"},{id:"agt",text:"agents.get(\"travel-chat\")"},{id:"dep",text:"\"travel-chat\""},{id:"fam",text:"\"gpt-4.1\""},{id:"ot",text:"output_text"},{id:"cmc",text:"choices[0].message.content"}],
+      answer:{b1:"dac",b2:"goc",b3:"dep",b4:"ot"},
+      rationale:"The project client authenticates with a token credential such as DefaultAzureCredential; it does not accept an API key credential. get_openai_client() returns an authenticated OpenAI client. The model argument takes the deployment name. With the Responses API, response.output_text holds the generated text, whereas choices[0].message.content is the Chat Completions response shape."
     },
     {
       id:"f11",domain:"foundry",type:"single",
-      prompt:"When is creating an agent in Foundry more appropriate than calling a model deployment directly?",
-      options:[{id:"a",text:"When you only need one completion and no tools"},{id:"b",text:"When you want saved instructions plus tools, such as file search or code interpreter, and managed conversation state"},{id:"c",text:"When you want to avoid choosing a model"},{id:"d",text:"When you need to train a new foundation model"}],answer:"b",
-      rationale:"An agent packages a model with instructions and tools and works with conversations, so it can carry out multistep tasks. A single direct model call is simpler when none of that is required."
+      prompt:"Which endpoint must you pass to AIProjectClient?",
+      options:[{id:"a",text:"https://<resource>.openai.azure.com/openai/v1/"},{id:"b",text:"https://ai.azure.com/<project>"},{id:"c",text:"https://<resource>.cognitiveservices.azure.com/"},{id:"d",text:"https://<resource>.services.ai.azure.com/api/projects/<project>"}],answer:"d",
+      rationale:"The project client needs the project endpoint, shown on the project's overview page. The /openai/v1/ URL is the OpenAI-compatible endpoint, which is used directly with the OpenAI library, not with AIProjectClient. The portal URL is not an API endpoint."
     },
     {
-      id:"f12",domain:"foundry",type:"order",caseStudy:"travel",
-      prompt:"Arrange the steps for Contoso to create and test a single brochure-searching agent in the Foundry portal.",
-      options:[{id:"create",text:"Create an agent and select a model deployment"},{id:"instr",text:"Write the agent's instructions (travel-only, British English)"},{id:"tool",text:"Add knowledge by uploading the brochures for file search"},{id:"test",text:"Test the agent in the agent playground"}],answer:["create","instr","tool","test"],
-      rationale:"An agent needs a model, then instructions that define its behaviour, then tools or knowledge such as file search over uploaded brochures. Testing in the playground confirms that the parts work together."
+      id:"f12",domain:"foundry",type:"single",caseStudy:"travel",
+      prompt:"Contoso's code uses DefaultAzureCredential. It works on a developer laptop after az login but fails with an authentication error in Azure App Service. Keys must not be stored. What should be done?",
+      options:[{id:"a",text:"Add the resource key to the App Service settings and use it in code"},{id:"b",text:"Run az login on the App Service instance"},{id:"c",text:"Increase the request timeout"},{id:"d",text:"Enable a managed identity on the App Service and grant it an appropriate Foundry role on the project"}],answer:"d",
+      rationale:"In Azure, DefaultAzureCredential can use a managed identity, but the identity must exist and must be granted a role, such as Foundry User, on the project. Storing a key breaks the requirement, and az login is an interactive developer sign-in."
     },
     {
-      id:"f13",domain:"foundry",type:"match",label:"DRAG DROP",
-      prompt:"Match each requirement for a single agent to the tool to add.",
-      options:[{id:"t1",text:"Answer questions from uploaded product manuals"},{id:"t2",text:"Calculate averages from an uploaded spreadsheet"},{id:"t3",text:"Answer questions about today's news"},{id:"t4",text:"Look up an order in the company's own order system"}],
-      choices:[{id:"fs",text:"File search"},{id:"ci",text:"Code interpreter"},{id:"bing",text:"Grounding with Bing Search"},{id:"fn",text:"Function calling or an OpenAPI tool"},{id:"img",text:"Image generation"}],
-      answer:{t1:"fs",t2:"ci",t3:"bing",t4:"fn"},
-      rationale:"File search retrieves from uploaded documents. Code interpreter runs Python for calculations. Grounding with Bing Search brings in current web information. Function calling or an OpenAPI tool lets the agent call your own systems."
+      id:"f13",domain:"foundry",type:"single",
+      prompt:"A developer is signed in with az login and holds the Contributor role on the Foundry resource. Calls to responses.create through the project return a permission error. Which role assignment fixes this with least privilege?",
+      options:[{id:"a",text:"Owner on the subscription"},{id:"b",text:"Foundry User on the project"},{id:"c",text:"Reader on the resource group"},{id:"d",text:"Foundry Account Owner on the resource"}],answer:"b",
+      rationale:"Contributor and Account Owner grant management-plane (control) permissions, not the data actions needed to call models and agents. Foundry User grants data actions for building and testing in the project. Reader is read-only, and Owner is excessive."
     },
     {
-      id:"f14",domain:"foundry",type:"single",
-      prompt:"An existing Foundry agent must be used from a small Python app that holds multi-turn chats. Which approach matches the Foundry SDK pattern?",
-      options:[{id:"a",text:"Get an OpenAI client bound to the agent, create a conversation, and call responses.create with that conversation for each message"},{id:"b",text:"Re-create the agent before every message"},{id:"c",text:"Call the model deployment directly and paste the agent's instructions into every user message"},{id:"d",text:"Export the agent as a PDF"}],answer:"a",
-      rationale:"project.get_openai_client(agent_name=...) returns a client bound to the agent. A conversation keeps context, and each responses.create call that references it continues the chat."
+      id:"f14",domain:"foundry",type:"single",caseStudy:"travel",
+      prompt:"Contoso's client sends each new message with responses.create, but the model has forgotten the destination the customer gave two turns earlier. Which change provides multi-turn context?",
+      options:[{id:"a",text:"Create a conversation once and pass its ID with every responses.create call"},{id:"b",text:"Lower the temperature"},{id:"c",text:"Add the customer's destination to the shared system message for all customers"},{id:"d",text:"Create a new deployment for each customer"}],answer:"a",
+      rationale:"Each model call is stateless. A conversation (or chaining with the previous response ID, or resending the history) carries earlier turns. Adding one customer's data to shared instructions would leak it to every other customer."
     },
     {
-      id:"f15",domain:"foundry",type:"single",caseStudy:"travel",
-      prompt:"During testing, the travel agent starts giving cooking recipes when asked. What should Contoso change first?",
-      options:[{id:"a",text:"Refine the agent's instructions to restrict it to travel topics and say how to decline other requests"},{id:"b",text:"Increase maximum output tokens"},{id:"c",text:"Delete the uploaded brochures"},{id:"d",text:"Deploy a second model"}],answer:"a",
-      rationale:"The agent's instructions define its scope and behaviour. Clear limits and a refusal pattern are the first fix; output length and extra deployments do not address scope."
+      id:"f15",domain:"foundry",type:"yesno",
+      prompt:"You are writing a Python client with the Foundry SDK.",
+      options:[{id:"s1",text:"With the Responses API, response.output_text contains the model's generated text."},{id:"s2",text:"AIProjectClient can authenticate by passing the resource's API key."},{id:"s3",text:"If the deployment is renamed, the model value in the code must also change."}],
+      answer:{s1:"yes",s2:"no",s3:"yes"},
+      rationale:"Box 1: Yes. output_text is a convenience property that holds the generated text. Box 2: No. The project client uses Microsoft Entra ID token credentials. Key-based calls go through the OpenAI-compatible endpoint with the OpenAI library instead. Box 3: Yes. The model argument is the deployment name."
     },
     {
       id:"f16",domain:"foundry",type:"single",
-      prompt:"A developer must build and test agents in an existing Foundry project, but should not create projects, manage model deployments, or assign roles. Which built-in role fits?",
-      options:[{id:"a",text:"Foundry Owner"},{id:"b",text:"Foundry User"},{id:"c",text:"Foundry Account Owner"},{id:"d",text:"Owner on the subscription"}],answer:"b",
-      rationale:"Foundry User (formerly Azure AI User) is the least-privilege role for building and testing in a project. Owner-level roles can create resources and manage access."
+      prompt:"A developer wants to use the standard OpenAI Python library with an API key, without the Foundry SDK, to call a model deployed in a Foundry resource. Which base_url should the OpenAI client use?",
+      options:[{id:"a",text:"https://<resource>.services.ai.azure.com/api/projects/<project>"},{id:"b",text:"https://api.openai.com/v1/"},{id:"c",text:"https://<resource>.openai.azure.com/openai/v1/"},{id:"d",text:"https://management.azure.com/"}],answer:"c",
+      rationale:"The OpenAI-compatible v1 endpoint on the resource works with the standard OpenAI client and an API key or Entra token. The project endpoint is for AIProjectClient, and api.openai.com is OpenAI's own service, not your Azure deployment."
+    },
+
+    // Agents
+    {
+      id:"f17",domain:"foundry",type:"order",caseStudy:"travel",
+      prompt:"Arrange the steps to create and test Contoso's brochure agent in the Foundry portal.",
+      options:[{id:"new",text:"Create an agent and select the travel-chat deployment"},{id:"ins",text:"Write instructions covering scope, British English, and refusals"},{id:"fs",text:"Add the file search tool and upload the brochure PDFs"},{id:"pg",text:"Test in the agent playground, checking answers and citations"}],answer:["new","ins","fs","pg"],
+      rationale:"An agent needs a model, then instructions, then tools and knowledge. Testing in the playground confirms that instructions and retrieval work together before the agent is used from code."
     },
     {
-      id:"f17",domain:"foundry",type:"single",
-      prompt:"Two teams share a Foundry resource but need to keep their own agents, files, and deployments separate. What should be created?",
-      options:[{id:"a",text:"Separate projects within the same Foundry resource"},{id:"b",text:"A separate Azure subscription for every agent"},{id:"c",text:"One project, with team names added to agent instructions"},{id:"d",text:"Separate system prompts in one playground"}],answer:"a",
-      rationale:"A Foundry resource can contain multiple projects. Each project is a workspace for its own agents, files, and evaluations, while sharing the resource's governance and connections."
+      id:"f18",domain:"foundry",type:"single",caseStudy:"travel",
+      prompt:"Contoso's agent must answer from the 200 brochure PDFs and cite the brochure it used. What should be configured?",
+      options:[{id:"a",text:"Paste all of the brochure text into the agent's instructions"},{id:"b",text:"Code Interpreter with the brochures uploaded"},{id:"c",text:"Grounding with Bing Search"},{id:"d",text:"The file search tool with the brochures uploaded to its vector store"}],answer:"d",
+      rationale:"File search chunks, embeds, and retrieves passages from uploaded files and supports citations. 200 PDFs would not fit in instructions. Code Interpreter can open files, but it is for running code, not retrieval with citations. Bing searches the public web."
+    },
+    {
+      id:"f19",domain:"foundry",type:"match",label:"DRAG DROP",
+      prompt:"Match each requirement to the agent tool to add. Each tool may be used once or not at all.",
+      options:[{id:"r1",text:"Create a chart from an uploaded CSV of monthly bookings"},{id:"r2",text:"Check live flight status through an airline API described by an OpenAPI 3.0 spec"},{id:"r3",text:"Find visa rules published on government websites today"},{id:"r4",text:"Answer from 200 uploaded hotel contracts"},{id:"r5",text:"Call a booking function that runs inside the client application"}],
+      choices:[{id:"ci",text:"Code Interpreter"},{id:"oa",text:"OpenAPI tool"},{id:"bing",text:"Grounding with Bing Search"},{id:"fs",text:"File search"},{id:"fn",text:"Function calling"},{id:"ais",text:"Azure AI Search"}],
+      answer:{r1:"ci",r2:"oa",r3:"bing",r4:"fs",r5:"fn"},
+      rationale:"Code Interpreter runs Python for analysis and charts. The OpenAPI tool calls an API from its specification. Bing grounding retrieves current public web content. File search retrieves from uploaded files. Function calling asks the client to run its own function. Azure AI Search is for an existing search index, which none of these requirements mention."
+    },
+    {
+      id:"f20",domain:"foundry",type:"single",
+      prompt:"An agent uses function calling to book hotel rooms through a function defined in the client app. Who executes the booking function?",
+      options:[{id:"a",text:"The model executes the function inside Foundry"},{id:"b",text:"Foundry runs the function in Code Interpreter"},{id:"c",text:"The client application executes it after the model returns a function call with arguments, and then sends the result back"},{id:"d",text:"Bing executes it"}],answer:"c",
+      rationale:"With function calling, the model only decides that a function should be called and with which arguments. Your application runs the function and returns the output so the model can continue."
+    },
+    {
+      id:"f21",domain:"foundry",type:"match",label:"HOTSPOT",caseStudy:"travel",
+      prompt:"Complete the code that creates Contoso's agent and sends the first message in a multi-turn conversation. Select the correct option for each box.",
+      code:`agent = project.agents.create_version(
+    agent_name="travel-agent",
+    definition=[ Box 1 ](
+        model="travel-chat",
+        [ Box 2 ]="Answer only travel questions, in British English.",
+    ),
+)
+client = project.get_openai_client(agent_name="travel-agent")
+conv = client.[ Box 3 ].create()
+reply = client.responses.create(
+    conversation=[ Box 4 ],
+    input="Ideas for a weekend in Porto?",
+)`,
+      options:[{id:"b1",text:"Box 1"},{id:"b2",text:"Box 2"},{id:"b3",text:"Box 3"},{id:"b4",text:"Box 4"}],
+      choices:[{id:"pad",text:"PromptAgentDefinition"},{id:"ins",text:"instructions"},{id:"sys",text:"system_prompt"},{id:"cnv",text:"conversations"},{id:"thr",text:"threads"},{id:"cid",text:"conv.id"},{id:"nm",text:"\"travel-agent\""}],
+      answer:{b1:"pad",b2:"ins",b3:"cnv",b4:"cid"},
+      rationale:"A prompt agent is defined with PromptAgentDefinition(model=..., instructions=...). After getting a client bound to the agent, conversations.create() starts a conversation, and each responses.create call passes conversation=conv.id to keep context."
+    },
+    {
+      id:"f22",domain:"foundry",type:"yesno",
+      prompt:"You are configuring tools for a Foundry agent.",
+      options:[{id:"s1",text:"One agent can use several tools, such as file search and Code Interpreter."},{id:"s2",text:"Grounding with Bing Search sends data outside the Azure compliance boundary, so its terms should be reviewed before it is enabled."},{id:"s3",text:"The file search tool requires you to create and manage your own Azure AI Search index first."}],
+      answer:{s1:"yes",s2:"yes",s3:"no"},
+      rationale:"Box 1: Yes. Agents can combine tools, and the model chooses which to use. Box 2: Yes. Bing grounding is governed by separate terms, and data flows outside the Azure compliance boundary. Box 3: No. File search manages its own vector store for uploaded files; the Azure AI Search tool is the option for an existing index."
+    },
+    {
+      id:"f23",domain:"foundry",type:"single",
+      prompt:"A web app only needs to send messages to an existing Foundry agent. It must not be able to create or modify agents or other project content. Which role should its identity receive?",
+      options:[{id:"a",text:"Foundry Agent Consumer"},{id:"b",text:"Foundry User"},{id:"c",text:"Foundry Project Manager"},{id:"d",text:"Contributor"}],answer:"a",
+      rationale:"Foundry Agent Consumer is the least-privilege role for principals that only interact with agents. Foundry User also allows building and changing content in the project, which this app does not need."
+    },
+    {
+      id:"f24",domain:"foundry",type:"single",
+      prompt:"Two teams share one Foundry resource. Each team needs its own agents, files, and evaluations, with separate access control. What should be created?",
+      options:[{id:"a",text:"One project, with each team's name added to its agents' instructions"},{id:"b",text:"A separate project for each team within the same Foundry resource"},{id:"c",text:"A separate Azure subscription for each agent"},{id:"d",text:"Separate deployments of the same model in one project"}],answer:"b",
+      rationale:"Projects are the unit of isolation for agents, files, and evaluations, and access can be granted per project. Separate deployments within one project do not separate agents or files."
     },
 
     // Text and speech
     {
-      id:"f18",domain:"foundry",type:"single",
-      prompt:"A lightweight app must find and mask names, phone numbers, and email addresses in support tickets before storing them. Which Foundry Tools capability should it call?",
-      options:[{id:"a",text:"Azure Language PII detection"},{id:"b",text:"Azure Speech text to speech"},{id:"c",text:"Image generation"},{id:"d",text:"Azure Translator"}],answer:"a",
-      rationale:"PII detection in Azure Language identifies personal information and can return redacted text. The other services do not identify personal data."
-    },
-    {
-      id:"f19",domain:"foundry",type:"single",
-      prompt:"An app must turn each free-text complaint into JSON with the fields product, issue, and urgency. Which approach is simplest with a deployed language model?",
-      options:[{id:"a",text:"Prompt the model with clear instructions and a JSON schema (structured output), then validate the result"},{id:"b",text:"Use speech synthesis"},{id:"c",text:"Use OCR on the complaint text"},{id:"d",text:"Ask for a long prose answer and copy fields manually"}],answer:"a",
-      rationale:"Language models can extract fields when instructed, and structured outputs with a schema make the format reliable. Validating the JSON protects downstream code."
-    },
-    {
-      id:"f20",domain:"foundry",type:"single",
-      prompt:"Users record a spoken question in an app. The team wants a deployed model to respond without building a separate speech-to-text step. What should they use?",
-      options:[{id:"a",text:"An audio-capable multimodal model, sending the audio as input"},{id:"b",text:"An image-generation model"},{id:"c",text:"An embedding model"},{id:"d",text:"Key phrase extraction"}],answer:"a",
-      rationale:"Multimodal models that accept audio can reason over spoken input directly and, depending on the model, reply in text or audio. Embedding and image models cannot interpret speech."
-    },
-    {
-      id:"f21",domain:"foundry",type:"single",
-      prompt:"An app must read news headlines aloud in a specific neural voice by using Azure Speech in Foundry Tools. What should the code do?",
-      options:[{id:"a",text:"Set the voice name in the speech configuration and use a speech synthesizer to speak the text"},{id:"b",text:"Use a speech recognizer on the headline text"},{id:"c",text:"Train a custom speech-recognition model"},{id:"d",text:"Call language detection"}],answer:"a",
-      rationale:"Text to speech uses a synthesizer, and the speech configuration selects the neural voice. SSML can further adjust rate and pronunciation. A recognizer converts audio to text, the opposite direction."
-    },
-    {
-      id:"f22",domain:"foundry",type:"order",
-      prompt:"Arrange the steps for a simple voice assistant that uses Azure Speech and a text-only model.",
-      options:[{id:"mic",text:"Capture audio from the microphone"},{id:"stt",text:"Recognise the speech as text"},{id:"llm",text:"Send the text to the deployed model and get a reply"},{id:"tts",text:"Synthesise the reply as speech and play it"}],answer:["mic","stt","llm","tts"],
-      rationale:"Speech must be transcribed before a text-only model can use it. The model's text reply is then converted back to audio with text to speech."
-    },
-    {
-      id:"f23",domain:"foundry",type:"yesno",
-      prompt:"You are building an app with Azure Speech in Foundry Tools.",
-      options:[{id:"s1",text:"The Speech SDK can recognise speech from a microphone or from an audio file."},{id:"s2",text:"Changing the synthesised voice requires training a custom voice model."},{id:"s3",text:"Speech translation can convert spoken audio into text in another language."}],
-      answer:{s1:"yes",s2:"no",s3:"yes"},
-      rationale:"Box 1: Yes. Audio input can come from a microphone, a file, or a stream. Box 2: No. You can choose from many prebuilt neural voices by name; custom voices are optional. Box 3: Yes. Speech translation outputs translated text and can also synthesise translated speech."
-    },
-    {
-      id:"f24",domain:"foundry",type:"multi",
-      prompt:"A customer-service app must turn each recorded call into a short written summary. Which two capabilities are needed if the model accepts only text?",
-      options:[{id:"a",text:"Speech to text (transcription)"},{id:"b",text:"Summarisation by a language model or Azure Language"},{id:"c",text:"Text to speech"},{id:"d",text:"Object detection"},{id:"e",text:"Image generation"}],answer:["a","b"],
-      rationale:"The audio must first be transcribed. The transcript can then be summarised by a language model or the Azure Language summarisation feature."
-    },
-
-    // Computer vision and image generation
-    {
       id:"f25",domain:"foundry",type:"single",
-      prompt:"A cooking app sends a photo of the inside of a fridge and asks a deployed multimodal model for a recipe. How should the request be built?",
-      options:[{id:"a",text:"Include the image (as a URL or base64 data) together with the text question in the user message"},{id:"b",text:"Put the image file name in the system prompt"},{id:"c",text:"Run OCR first and send only the extracted text"},{id:"d",text:"Use an image-generation deployment"}],answer:"a",
-      rationale:"Multimodal models accept image content items alongside text in the same input. OCR would capture only text in the image, not the food items shown."
+      prompt:"An app must redact personal data from support tickets with consistent, predefined entity categories and confidence scores, while keeping prompt engineering to a minimum. Which option fits best?",
+      options:[{id:"a",text:"A chat model prompted to \"remove anything personal\""},{id:"b",text:"Image generation"},{id:"c",text:"Azure Language PII detection"},{id:"d",text:"Azure Translator"}],answer:"c",
+      rationale:"Azure Language PII detection returns standard categories, offsets, confidence scores, and redacted text without prompt design. A prompted LLM can work, but its output categories and consistency depend on the prompt, which conflicts with the requirement."
     },
     {
-      id:"f26",domain:"foundry",type:"yesno",
-      prompt:"You are sending images to a deployed multimodal model.",
-      options:[{id:"s1",text:"An image can be sent as a URL or as base64-encoded data."},{id:"s2",text:"The model can answer a question that combines the image's content with text instructions."},{id:"s3",text:"The image must be converted to text with OCR before the model can process it."}],
-      answer:{s1:"yes",s2:"yes",s3:"no"},
-      rationale:"Box 1: Yes. Both are supported ways to supply image input. Box 2: Yes. Multimodal reasoning combines visual and text input. Box 3: No. The model interprets the image directly."
+      id:"f26",domain:"foundry",type:"match",label:"HOTSPOT",
+      prompt:"Complete the Python code so that it speaks a boarding announcement in a British neural voice by using Azure Speech in Foundry Tools. Select the correct option for each box.",
+      code:`import azure.cognitiveservices.speech as speechsdk
+
+speech_config = speechsdk.SpeechConfig(subscription=KEY, endpoint=ENDPOINT)
+speech_config.[ Box 1 ] = "en-GB-SoniaNeural"
+synth = speechsdk.[ Box 2 ](speech_config=speech_config)
+result = synth.[ Box 3 ]("Flight CT201 is now boarding.").get()
+if result.reason == speechsdk.ResultReason.[ Box 4 ]:
+    print("Announcement played")`,
+      options:[{id:"b1",text:"Box 1"},{id:"b2",text:"Box 2"},{id:"b3",text:"Box 3"},{id:"b4",text:"Box 4"}],
+      choices:[{id:"vn",text:"speech_synthesis_voice_name"},{id:"rl",text:"speech_recognition_language"},{id:"ss",text:"SpeechSynthesizer"},{id:"sr",text:"SpeechRecognizer"},{id:"sta",text:"speak_text_async"},{id:"roa",text:"recognize_once_async"},{id:"sac",text:"SynthesizingAudioCompleted"},{id:"rs",text:"RecognizedSpeech"}],
+      answer:{b1:"vn",b2:"ss",b3:"sta",b4:"sac"},
+      rationale:"speech_synthesis_voice_name selects the neural voice. A SpeechSynthesizer converts text to speech, speak_text_async starts synthesis (.get() waits for it), and the result reason SynthesizingAudioCompleted confirms success. The recognizer, recognize_once_async, and RecognizedSpeech belong to speech-to-text."
     },
     {
       id:"f27",domain:"foundry",type:"single",
-      prompt:"A retailer wants an app that creates product mock-up images from text descriptions. What should the developer deploy and call?",
-      options:[{id:"a",text:"An image-generation model, such as gpt-image-1, called with a prompt and options such as size and quality"},{id:"b",text:"An embedding model"},{id:"c",text:"Azure Speech"},{id:"d",text:"A Content Understanding document analyzer"}],answer:"a",
-      rationale:"Image-generation models create images from prompts, with options for size, quality, and number of images. The other services analyse or transform other kinds of content."
+      prompt:"An app uses recognize_once_async() to transcribe a 45-minute meeting from a microphone, but it stops after the first sentence. What should the developer use instead?",
+      options:[{id:"a",text:"Continuous recognition, starting it and handling the recognized events until the meeting ends"},{id:"b",text:"A longer request timeout on recognize_once_async()"},{id:"c",text:"speak_text_async()"},{id:"d",text:"A higher temperature"}],answer:"a",
+      rationale:"recognize_once_async() returns after a single utterance, ending at the first silence. Continuous recognition (start_continuous_recognition_async with event handlers) transcribes long audio."
     },
     {
       id:"f28",domain:"foundry",type:"single",
-      prompt:"A designer wants to change only the background of a generated product image and keep the product exactly the same. Which technique should the app use?",
-      options:[{id:"a",text:"Generate a completely new image from the same prompt"},{id:"b",text:"Edit the image with a mask that covers only the background (inpainting)"},{id:"c",text:"Crop the image"},{id:"d",text:"Lower the temperature of a text model"}],answer:"b",
-      rationale:"Mask-based editing changes only the masked region and preserves the rest. Regenerating would probably change the product too."
+      prompt:"A speech-to-text app returns nonsense when French customers speak. The recognizer uses default settings. Which change most directly fixes this?",
+      options:[{id:"a",text:"Set speech_synthesis_voice_name to a French voice"},{id:"b",text:"Use Azure Translator on the audio"},{id:"c",text:"Increase the microphone volume"},{id:"d",text:"Set speech_recognition_language to \"fr-FR\", or enable automatic language identification"}],answer:"d",
+      rationale:"The recognizer defaults to en-US. Setting the recognition language, or using language identification when it varies, lets it decode French correctly. The synthesis voice affects only text-to-speech output."
     },
     {
-      id:"f29",domain:"foundry",type:"multi",
-      prompt:"Which two practices help an image-generation app follow responsible AI guidelines?",
-      options:[{id:"a",text:"Keep content filters on for prompts and generated images"},{id:"b",text:"Tell users that images are AI-generated; supported models also embed content credentials"},{id:"c",text:"Turn off filtering to reduce latency"},{id:"d",text:"Publish images of real people without consent"},{id:"e",text:"Hide that the app uses AI"}],answer:["a","b"],
-      rationale:"Content filters reduce harmful outputs, and disclosure, supported by C2PA content credentials on Azure OpenAI images, supports transparency. Removing safeguards or hiding AI use goes against responsible AI principles."
+      id:"f29",domain:"foundry",type:"multi",solution:"complete",
+      prompt:"Users must be able to ask questions by voice and hear spoken answers. Which two designs each provide a complete solution?",
+      options:[{id:"a",text:"Azure Speech speech-to-text, then a deployed text model, then Azure Speech text-to-speech"},{id:"b",text:"A real-time audio-capable model that accepts spoken input and returns spoken output"},{id:"c",text:"Azure Translator followed by an image-generation model"},{id:"d",text:"Azure Language sentiment analysis followed by text-to-speech"},{id:"e",text:"OCR followed by text-to-speech"}],answer:["a","b"],
+      rationale:"Either a speech pipeline around a text model, or a single audio-in, audio-out model, meets the requirement on its own. The other options never understand the spoken question."
+    },
+    {
+      id:"f30",domain:"foundry",type:"single",
+      prompt:"An app must respond to a user's recorded spoken question by using a deployed model, without calling a separate speech service. What is required?",
+      options:[{id:"a",text:"An embedding model deployment"},{id:"b",text:"A model deployment that supports audio input, with the audio sent in the request"},{id:"c",text:"An image-generation deployment"},{id:"d",text:"A text-only model, with the audio file name sent as text"}],answer:"b",
+      rationale:"Only audio-capable multimodal models can interpret speech directly. A text-only model cannot process audio, and sending a file name gives it nothing to understand."
+    },
+    {
+      id:"f31",domain:"foundry",type:"yesno",
+      prompt:"You are building an app with the Azure Speech SDK.",
+      options:[{id:"s1",text:"For best accuracy, the recognition language should match the spoken language, unless language identification is used."},{id:"s2",text:"A SpeechSynthesizer created without an audio config plays audio through the default speaker."},{id:"s3",text:"recognize_once_async() is designed for transcribing long recordings."}],
+      answer:{s1:"yes",s2:"yes",s3:"no"},
+      rationale:"Box 1: Yes. The recognizer decodes using the configured locale. Box 2: Yes. Default output is the system speaker. Box 3: No. It returns after one utterance; continuous recognition or batch transcription handles long audio."
     },
 
-    // Information extraction with Content Understanding
+    // Vision and image generation
     {
-      id:"f30",domain:"foundry",type:"single",caseStudy:"insurer",
-      prompt:"Fabrikam needs vendor name, invoice total, and due date from garage repair invoices as quickly as possible. What should the app use?",
-      options:[{id:"a",text:"A prebuilt invoice analyzer in Azure Content Understanding"},{id:"b",text:"An image-generation model"},{id:"c",text:"Text to speech"},{id:"d",text:"A custom speech model"}],answer:"a",
-      rationale:"Content Understanding provides prebuilt analyzers for common documents such as invoices, returning structured fields without defining a schema yourself."
+      id:"f32",domain:"foundry",type:"match",label:"HOTSPOT",
+      prompt:"Complete the code so that it sends a local JPEG of a restaurant menu, together with a question, to the vision-chat deployment by using the Responses API. b64 holds the base64-encoded file bytes. Select the correct option for each box.",
+      code:`response = client.responses.create(
+    model="vision-chat",
+    input=[{
+        "role": "user",
+        "content": [
+            {"type": [ Box 1 ], "text": "List the vegetarian dishes."},
+            {"type": [ Box 2 ], "image_url": [ Box 3 ]},
+        ],
+    }],
+)`,
+      options:[{id:"b1",text:"Box 1"},{id:"b2",text:"Box 2"},{id:"b3",text:"Box 3"}],
+      choices:[{id:"it",text:"\"input_text\""},{id:"ii",text:"\"input_image\""},{id:"txt",text:"\"text\""},{id:"img",text:"\"image\""},{id:"data",text:"f\"data:image/jpeg;base64,{b64}\""},{id:"path",text:"\"C:/menus/menu.jpg\""},{id:"raw",text:"open(\"menu.jpg\", \"rb\").read()"}],
+      answer:{b1:"it",b2:"ii",b3:"data"},
+      rationale:"Responses API content items use the types input_text and input_image. A local image is sent as a data URL containing base64 data (or a public URL can be used). A local file path or raw bytes cannot be passed as image_url."
     },
     {
-      id:"f31",domain:"foundry",type:"single",caseStudy:"insurer",
-      prompt:"Fabrikam's own claim forms contain company-specific fields such as \"Policy band\" and \"Garage approval code\". How should the app extract them?",
-      options:[{id:"a",text:"Create a custom analyzer with a field schema that describes the fields to extract"},{id:"b",text:"Use the prebuilt invoice analyzer unchanged"},{id:"c",text:"Run sentiment analysis on the forms"},{id:"d",text:"Generate images of the forms"}],answer:"a",
-      rationale:"A custom analyzer defines the fields and their descriptions or types, so Content Understanding can extract organisation-specific data. A prebuilt invoice analyzer only returns the fields it was designed for."
+      id:"f33",domain:"foundry",type:"single",
+      prompt:"An app sends an image to a deployment and receives an error saying that image input is not supported. The code is correct. What is the most likely fix?",
+      options:[{id:"a",text:"Increase the maximum output tokens"},{id:"b",text:"Run OCR on the image first"},{id:"c",text:"Deploy a model that supports image input and send the request to that deployment"},{id:"d",text:"Lower the temperature"}],answer:"c",
+      rationale:"Only multimodal models accept images. A text-only deployment rejects image content. OCR would capture text only and lose visual content."
     },
     {
-      id:"f32",domain:"foundry",type:"match",label:"DRAG DROP",caseStudy:"insurer",
-      prompt:"Match each Fabrikam input to the kind of output that Content Understanding can produce from it.",
-      options:[{id:"i1",text:"A scanned repair estimate (PDF)"},{id:"i2",text:"A photo of vehicle damage"},{id:"i3",text:"A recorded phone call with a customer"},{id:"i4",text:"A dash-cam video clip"}],
-      choices:[{id:"doc",text:"Markdown text and extracted fields, including tables"},{id:"img",text:"A description and fields about what the image shows"},{id:"aud",text:"A transcript with speakers, plus a summary and fields"},{id:"vid",text:"Time-stamped segments with key-frame descriptions"},{id:"syn",text:"Synthesised speech audio"}],
-      answer:{i1:"doc",i2:"img",i3:"aud",i4:"vid"},
-      rationale:"Content Understanding handles documents, images, audio, and video. It returns structured output appropriate to each modality, such as Markdown and fields for documents, descriptions for images, transcripts for audio, and segments for video. It does not synthesise speech."
+      id:"f34",domain:"foundry",type:"single",
+      prompt:"Compared with a request that generates a new image from a prompt, what must an image edit request also include?",
+      options:[{id:"a",text:"The source image to edit, and optionally a mask that marks the area to change"},{id:"b",text:"An embedding of the prompt"},{id:"c",text:"A speech configuration"},{id:"d",text:"A stop sequence"}],answer:"a",
+      rationale:"Editing operates on an existing image. A mask limits changes to a region (inpainting), and the rest of the image is preserved."
     },
     {
-      id:"f33",domain:"foundry",type:"yesno",
-      prompt:"You are evaluating Azure Content Understanding in Foundry Tools.",
-      options:[{id:"s1",text:"Content Understanding can process documents, images, audio, and video."},{id:"s2",text:"An analyzer defines how content is processed and which fields are extracted."},{id:"s3",text:"Content Understanding outputs plain text only, not structured fields."}],
+      id:"f35",domain:"foundry",type:"match",label:"DRAG DROP",
+      prompt:"Match each requirement to the most appropriate Foundry capability. Each capability may be used once or not at all.",
+      options:[{id:"v1",text:"Answer free-form questions about a photo in a chat"},{id:"v2",text:"Create a new illustration for a brochure cover"},{id:"v3",text:"Extract the same fixed set of fields from thousands of receipt photos"},{id:"v4",text:"Replace only the sky in a photo"}],
+      choices:[{id:"mm",text:"A multimodal chat model"},{id:"gen",text:"An image-generation model"},{id:"cu",text:"A Content Understanding analyzer"},{id:"edit",text:"Image editing with a mask"},{id:"tts",text:"Azure Speech text to speech"}],
+      answer:{v1:"mm",v2:"gen",v3:"cu",v4:"edit"},
+      rationale:"Multimodal chat models handle open-ended visual questions. Image-generation models create new images. Content Understanding analyzers apply a consistent field schema at scale. Mask-based editing changes one region of an image."
+    },
+    {
+      id:"f36",domain:"foundry",type:"multi",
+      prompt:"An app accepts user-uploaded images and sends them to a multimodal model. Which two practices reduce risk?",
+      options:[{id:"a",text:"Keep content filters on for image inputs and model outputs"},{id:"b",text:"Treat any text that appears inside images as untrusted content that cannot change the app's instructions"},{id:"c",text:"Turn off filtering to reduce latency"},{id:"d",text:"Follow instructions written inside uploaded images, because users supplied them"},{id:"e",text:"Store every uploaded image in a public container"}],answer:["a","b"],
+      rationale:"Filters catch harmful inputs and outputs. Text inside images can carry indirect prompt-injection attacks, so it must be treated as data. Following embedded instructions or exposing images publicly increases risk."
+    },
+    {
+      id:"f37",domain:"foundry",type:"yesno",
+      prompt:"You are building vision features in Foundry.",
+      options:[{id:"s1",text:"A multimodal model can read text that appears in an image without a separate OCR service."},{id:"s2",text:"An image-generation model can analyse an existing photo and count the objects in it."},{id:"s3",text:"Images generated by Azure OpenAI image models include C2PA content credentials."}],
+      answer:{s1:"yes",s2:"no",s3:"yes"},
+      rationale:"Box 1: Yes. Multimodal models interpret visible text as part of the image. Box 2: No. Generation models create images; analysis needs a multimodal or vision model. Box 3: Yes. Content credentials mark the images as AI-generated."
+    },
+    {
+      id:"f38",domain:"foundry",type:"single",
+      prompt:"An app must produce both a one-line caption and a detailed accessibility description for each image, as separate JSON fields, with minimal code. What is the simplest approach?",
+      options:[{id:"a",text:"Call an image-generation model twice"},{id:"b",text:"Make one call to a multimodal model with instructions for both outputs and a JSON schema for the response"},{id:"c",text:"Run OCR, then translate the result"},{id:"d",text:"Use speech synthesis"}],answer:"b",
+      rationale:"A single multimodal request can return several fields when the instructions and a structured-output schema define them. OCR captures only text in the image, not a description."
+    },
+
+    // Content Understanding
+    {
+      id:"f39",domain:"foundry",type:"single",caseStudy:"insurer",
+      prompt:"Which service best meets Fabrikam's requirement for one consistent field schema across PDFs, photos, videos, and call recordings, with minimal custom code?",
+      options:[{id:"a",text:"Azure Language, using custom named entity recognition"},{id:"b",text:"A multimodal chat model with a different prompt for each input type"},{id:"c",text:"Azure Content Understanding in Foundry Tools, using analyzers"},{id:"d",text:"Azure Translator"}],answer:"c",
+      rationale:"Content Understanding handles documents, images, audio, and video, with analyzers that define a field schema, and returns structured results. A prompted chat model could be made to work, but it needs more custom code and gives less consistent output. Azure Language works on text only."
+    },
+    {
+      id:"f40",domain:"foundry",type:"single",caseStudy:"insurer",
+      prompt:"Fabrikam needs a \"Damage severity\" value of minor, moderate, or severe for each damage photo. The value is never written anywhere and must be judged from the image. How should the field be defined in a custom analyzer?",
+      options:[{id:"a",text:"As an extract field that copies text from the photo"},{id:"b",text:"As a classify field with the allowed values minor, moderate, and severe"},{id:"c",text:"It cannot be defined; Content Understanding only returns text printed in the input"},{id:"d",text:"As a stop sequence"}],answer:"b",
+      rationale:"Analyzer fields can extract values that are present, generate values such as summaries, or classify into a fixed set of categories. Severity must be inferred and constrained to three values, so a classify field fits."
+    },
+    {
+      id:"f41",domain:"foundry",type:"order",caseStudy:"insurer",
+      prompt:"Arrange the REST calls and actions an app performs to analyse a repair invoice with the prebuilt invoice analyzer.",
+      options:[{id:"post",text:"POST to analyzers/prebuilt-invoice:analyze with the document URL in inputs"},{id:"loc",text:"Read the Operation-Location header from the 202 Accepted response"},{id:"poll",text:"GET the Operation-Location URL until the status is Succeeded"},{id:"read",text:"Read the fields and markdown from result.contents"}],answer:["post","loc","poll","read"],
+      rationale:"Analysis is asynchronous. The POST returns 202 with an Operation-Location URL, the client polls it until the status is Succeeded, and then reads the structured fields and Markdown from the result."
+    },
+    {
+      id:"f42",domain:"foundry",type:"yesno",
+      prompt:"You are using Azure Content Understanding in Foundry Tools.",
+      options:[{id:"s1",text:"Analysis requests are asynchronous; the client polls a URL for the result."},{id:"s2",text:"Before prebuilt analyzers can be used, the Foundry resource needs default model deployments configured for Content Understanding."},{id:"s3",text:"You must train a custom model on labelled samples before any field can be extracted."}],
       answer:{s1:"yes",s2:"yes",s3:"no"},
-      rationale:"Box 1: Yes. It is a multimodal extraction service. Box 2: Yes. Prebuilt and custom analyzers define processing and the field schema. Box 3: No. It returns structured fields, for example as JSON, as well as Markdown content."
+      rationale:"Box 1: Yes. The analyze call returns an Operation-Location to poll. Box 2: Yes. Content Understanding uses Foundry model deployments, such as a chat model, a mini model, and an embeddings model, set as defaults for the resource. Box 3: No. Prebuilt analyzers work immediately, and custom analyzers are defined with a field schema rather than trained on labelled data."
     },
     {
-      id:"f34",domain:"foundry",type:"order",caseStudy:"insurer",
-      prompt:"Arrange the steps for Fabrikam's lightweight Content Understanding app.",
-      options:[{id:"res",text:"Create a Foundry resource and set up the model deployments that Content Understanding uses"},{id:"ana",text:"Choose a prebuilt analyzer or create a custom analyzer with a field schema"},{id:"sub",text:"Submit a file for analysis and wait for the result"},{id:"use",text:"Use the returned fields and Markdown in the app"}],answer:["res","ana","sub","use"],
-      rationale:"Content Understanding runs in a Foundry resource with supporting model deployments. An analyzer defines what to extract, analysis runs as an operation the client polls, and the app then consumes the structured result."
+      id:"f43",domain:"foundry",type:"single",caseStudy:"insurer",
+      prompt:"For each dash-cam video, Fabrikam must find when the collision happens and get a description of that moment. Which Content Understanding output provides this?",
+      options:[{id:"a",text:"A single transcript of the audio track only"},{id:"b",text:"Time-stamped segments with descriptions and key frames from a video analyzer"},{id:"c",text:"Synthesised speech"},{id:"d",text:"A list of key phrases from the file name"}],answer:"b",
+      rationale:"Video analysis returns segments with start and end times, descriptions, and key-frame images, which locate events. An audio transcript alone misses visual events."
+    },
+    {
+      id:"f44",domain:"foundry",type:"match",label:"DRAG DROP",caseStudy:"insurer",
+      prompt:"Match each Fabrikam input to the output that Content Understanding returns for it. Each output may be used once or not at all.",
+      options:[{id:"i1",text:"A scanned repair estimate (PDF)"},{id:"i2",text:"A photo of vehicle damage"},{id:"i3",text:"A recorded customer phone call"},{id:"i4",text:"A dash-cam video clip"}],
+      choices:[{id:"doc",text:"Markdown, including tables, plus extracted fields"},{id:"img",text:"A description and fields about the image"},{id:"aud",text:"A transcript with speaker turns, plus a summary and fields"},{id:"vid",text:"Time-stamped segments with key-frame descriptions"},{id:"syn",text:"Synthesised speech audio"}],
+      answer:{i1:"doc",i2:"img",i3:"aud",i4:"vid"},
+      rationale:"Content Understanding returns modality-appropriate structure: Markdown and fields for documents, descriptions for images, transcripts for audio, and segments for video. It does not synthesise speech."
+    },
+    {
+      id:"f45",domain:"foundry",type:"single",caseStudy:"insurer",
+      prompt:"Fabrikam's own claim forms include company-specific fields such as \"Policy band\" and \"Garage approval code\" that no prebuilt analyzer returns. What should be done?",
+      options:[{id:"a",text:"Use the prebuilt invoice analyzer unchanged"},{id:"b",text:"Run sentiment analysis on the forms"},{id:"c",text:"Ask a chat model to guess the fields from the file name"},{id:"d",text:"Create a custom analyzer whose field schema names and describes the fields to extract"}],answer:"d",
+      rationale:"A custom analyzer's field schema tells Content Understanding exactly which organisation-specific values to return. Prebuilt analyzers return only their own predefined fields."
+    },
+    {
+      id:"f46",domain:"foundry",type:"multi",solution:"complete",
+      prompt:"Fabrikam's lightweight app must extract the total from each repair invoice. Which two approaches each provide a complete solution?",
+      options:[{id:"a",text:"Call the Content Understanding prebuilt invoice analyzer through the REST API and poll for the result"},{id:"b",text:"Use the Content Understanding Python SDK to analyse the invoice with the prebuilt invoice analyzer"},{id:"c",text:"Send the invoice to Azure Speech text to speech"},{id:"d",text:"Run Azure Language key phrase extraction on the PDF file name"},{id:"e",text:"Deploy an image-generation model and prompt it with the invoice number"}],answer:["a","b"],
+      rationale:"The REST API and the SDK are two ways to call the same analyzer. Each returns the structured invoice fields, including the total. The other options cannot read or extract data from the invoice."
     }
   ]
 };

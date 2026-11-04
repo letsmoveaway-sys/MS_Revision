@@ -111,12 +111,14 @@ The five domains fall within the guide's 25–30%, 30–35%, 10–15%, 10–15%,
 
 ### AI-901
 
-The bank has 60 independently written items, following the [Microsoft AI-901 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-901) (skills measured as of 15 April 2026):
+The bank has 80 independently written items, following the [Microsoft AI-901 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-901) (skills measured as of 15 April 2026):
 
-- 26 questions: identify AI concepts and capabilities (43.3%)
-- 34 questions: implement AI solutions by using Microsoft Foundry (56.7%)
+- 34 questions: identify AI concepts and capabilities (42.5%)
+- 46 questions: implement AI solutions by using Microsoft Foundry (57.5%)
 
-This matches the official ranges of 40–45% and 55–60%. Coverage includes all six responsible AI principles, how generative models work, model selection and deployment parameters, AI workload identification, text analysis, speech, computer vision and image generation, prompts, deploying and testing models in the Foundry portal, Foundry SDK chat and agent clients, single-agent tools, Azure Speech, multimodal image and audio input, and Content Understanding for documents, images, audio, and video. The bank has 38 single-answer, 5 multi-select, 4 build-list, 8 Yes/No, and 5 matching questions, with 9 questions in two case studies.
+This matches the official ranges of 40–45% and 55–60%. Version 2.0.0 was rewritten to be closer to real exam difficulty. Distractors are adjacent services or features (for example PII detection vs NER vs entity linking, extractive vs abstractive summarisation, diarisation vs speaker recognition, segmentation vs detection, Contributor vs Foundry User vs Foundry Agent Consumer, file search vs Code Interpreter vs Azure AI Search). Many items turn on a single requirement word. There are code-completion HOTSPOT items for the Foundry SDK (AIProjectClient, Responses API, agents and conversations), the Speech SDK, and multimodal image input, plus multi-select items marked "each correct answer presents a complete solution". The bank has 51 single-answer, 6 multi-select, 3 build-list, 9 Yes/No, and 11 matching or code-completion questions, with two case studies. The timed run is 60 minutes.
+
+Questions can include a `code` snippet (rendered as a code block in both views) and multi-select questions can set `solution: "complete"` to show the "complete solution" wording.
 
 For every exam, Practice mode reveals the correct answer and explanation after a single-choice answer or after **Check answer** for multi-select and build-list questions. Exam simulation reveals them during results review. The explanation panel links to that exam's Microsoft Learn outline for further study. The new SC-500 and AI-103 rationales also explain why a tempting alternative does not meet the requirement.
 

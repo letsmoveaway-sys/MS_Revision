@@ -85,7 +85,7 @@
 
   function defaultInstruction(q) {
     if (q.instruction) return q.instruction;
-    if (q.type === "multi") return `Select exactly ${q.answer.length} answers. Each correct answer presents part of the solution.`;
+    if (q.type === "multi") return `Select exactly ${q.answer.length} answers. Each correct answer presents ${q.solution === "complete" ? "a complete solution" : "part of the solution"}.`;
     if (q.type === "order") return "Arrange the items in the correct order.";
     if (q.type === "yesno") return "For each of the following statements, select Yes if the statement is true. Otherwise, select No.";
     if (q.type === "match") return "Select the appropriate option for each item. Each option may be used once, more than once, or not at all.";
@@ -206,6 +206,8 @@
     $("questionNumber").textContent = `QUESTION ${String(state.position + 1).padStart(2, "0")} / ${String(state.ids.length).padStart(2, "0")}`;
     $("questionType").textContent = q.type === "single" ? "SELECT ONE" : q.type === "multi" ? `SELECT ${q.answer.length}` : q.type === "yesno" ? "YES / NO" : q.type === "match" ? "MATCH" : "BUILD LIST";
     $("prompt").textContent = q.prompt;
+    $("code").hidden = !q.code;
+    $("code").textContent = q.code || "";
     $("instruction").textContent = defaultInstruction(q);
     renderCase(q);
     renderAnswers(q);
@@ -543,6 +545,7 @@
       <div class="bq-body">
         ${caseBox}
         <p class="bq-prompt">${label ? `<b class="bq-label">${label} -</b><br>` : ""}${escapeHtml(q.prompt)}</p>
+        ${q.code ? `<pre class="bq-code"><code>${escapeHtml(q.code)}</code></pre>` : ""}
         ${bankNote(q)}
         ${bankAnswers(q, revealed)}
         <div class="bq-actions">
@@ -556,7 +559,7 @@
   }
 
   function bankNote(q) {
-    if (q.type === "multi") return `<p class="bq-note">${q.instruction ? escapeHtml(q.instruction) + "<br>" : ""}Each correct answer presents part of the solution. Select ${q.answer.length}.<br><b>NOTE:</b> Each correct selection is worth one point.</p>`;
+    if (q.type === "multi") return `<p class="bq-note">${q.instruction ? escapeHtml(q.instruction) + "<br>" : ""}Each correct answer presents ${q.solution === "complete" ? "a complete solution" : "part of the solution"}. Select ${q.answer.length}.<br><b>NOTE:</b> Each correct selection is worth one point.</p>`;
     if (q.type === "yesno") return `<p class="bq-note">For each of the following statements, select Yes if the statement is true. Otherwise, select No.<br><b>NOTE:</b> Each correct selection is worth one point.</p><p class="bq-hot">Hot Area:</p>`;
     if (q.type === "match") return `<p class="bq-note">${escapeHtml(defaultInstruction(q))}<br><b>NOTE:</b> Each correct selection is worth one point.</p><p class="bq-hot">Select and Place:</p>`;
     if (q.type === "order") return `<p class="bq-note">Move the actions into the answer area and arrange them in the correct order.</p><p class="bq-hot">Select and Place:</p>`;
@@ -611,7 +614,7 @@
       key = `<p class="bq-key"><b>Correct Answer:</b></p><table class="bq-yn solved"><thead><tr><th>Statements</th><th>Yes</th><th>No</th></tr></thead><tbody>${q.options.map(o => `<tr><td>${escapeHtml(o.text)}</td><td>${q.answer[o.id] === "yes" ? '<span class="dot"></span>' : '<span class="ring"></span>'}</td><td>${q.answer[o.id] === "no" ? '<span class="dot"></span>' : '<span class="ring"></span>'}</td></tr>`).join("")}</tbody></table>`;
     } else if (q.type === "match") {
       const choices = choiceMap(q);
-      key = `<p class="bq-key"><b>Correct Answer:</b></p><ul class="bq-boxes">${q.options.map((o, i) => `<li><b>Box ${i + 1}:</b> ${escapeHtml(o.text)} → <span>${escapeHtml(choices[q.answer[o.id]].text)}</span></li>`).join("")}</ul>`;
+      key = `<p class="bq-key"><b>Correct Answer:</b></p><ul class="bq-boxes">${q.options.map((o, i) => `<li><b>Box ${i + 1}:</b> ${o.text === `Box ${i + 1}` ? "" : `${escapeHtml(o.text)} → `}<span>${escapeHtml(choices[q.answer[o.id]].text)}</span></li>`).join("")}</ul>`;
     } else {
       const options = optionMap(q);
       key = `<p class="bq-key"><b>Correct Answer:</b></p><ol class="bq-boxes">${q.answer.map(id => `<li>${escapeHtml(options[id].text)}</li>`).join("")}</ol>`;
