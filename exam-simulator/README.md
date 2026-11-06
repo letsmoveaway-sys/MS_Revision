@@ -1,6 +1,6 @@
 # Certification Mission Control
 
-A dependency-free, reusable certification-practice engine for AB-731, AB-900, SC-500, AI-103, and AI-901. Open `index.html` directly in a browser; no build step or web server is required. Choose an exam on the home screen before starting a practice or timed run. Each exam keeps its own saved session.
+A dependency-free, reusable certification-practice engine for AB-731, AB-900, SC-500, SC-900, AI-103, and AI-901. Open `index.html` directly in a browser; no build step or web server is required. Choose an exam on the home screen before starting a practice or timed run. Each exam keeps its own saved session.
 
 ## Publish to GitHub Pages
 
@@ -119,6 +119,17 @@ The bank has 80 independently written items, following the [Microsoft AI-901 stu
 This matches the official ranges of 40–45% and 55–60%. Version 2.0.0 was rewritten to be closer to real exam difficulty. Distractors are adjacent services or features (for example PII detection vs NER vs entity linking, extractive vs abstractive summarisation, diarisation vs speaker recognition, segmentation vs detection, Contributor vs Foundry User vs Foundry Agent Consumer, file search vs Code Interpreter vs Azure AI Search). Many items turn on a single requirement word. There are code-completion HOTSPOT items for the Foundry SDK (AIProjectClient, Responses API, agents and conversations), the Speech SDK, and multimodal image input, plus multi-select items marked "each correct answer presents a complete solution". The bank has 51 single-answer, 6 multi-select, 3 build-list, 9 Yes/No, and 11 matching or code-completion questions, with two case studies. The timed run is 60 minutes.
 
 Questions can include a `code` snippet (rendered as a code block in both views) and multi-select questions can set `solution: "complete"` to show the "complete solution" wording.
+
+### SC-900
+
+The bank has 80 independently written items, following the [Microsoft SC-900 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900) (skills measured as of 21 October 2026):
+
+- 10 questions: security, compliance, and identity concepts (12.5%)
+- 22 questions: Microsoft Entra (27.5%)
+- 30 questions: Microsoft security solutions (37.5%)
+- 18 questions: Microsoft compliance solutions (22.5%)
+
+This matches the official ranges of 10–15%, 25–30%, 35–40%, and 20–25%. The bank is written at exam difficulty, with distractors that are close neighbours: PTA vs PHS vs AD FS, Entra roles vs Azure RBAC, sign-in risk vs user risk, NSG vs Azure Firewall vs WAF, foundational CSPM vs Defender CSPM vs workload protection, SIEM vs SOAR vs XDR, EOP vs Defender for Office 365, content explorer vs activity explorer, record vs regulatory record, Audit Standard vs Premium, and privacy principles vs responsible AI principles. The bank has 57 single-answer, 2 multi-select, 12 Yes/No, and 9 matching questions. The timed run is 60 minutes.
 
 For every exam, Practice mode reveals the correct answer and explanation after a single-choice answer or after **Check answer** for multi-select and build-list questions. Exam simulation reveals them during results review. The explanation panel links to that exam's Microsoft Learn outline for further study. The new SC-500 and AI-103 rationales also explain why a tempting alternative does not meet the requirement.
 
